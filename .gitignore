@@ -1,0 +1,35 @@
+node_modules
+/config# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/config
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/ui/build
+/ui/temp
+ecosystem.config.js
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+nextjs-pm2-deploy.sh
+/ui/public/images/logo.pxd
+
+# temp files
+/api/uploads
+/api/tmp
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/api/data/sessions
+.next

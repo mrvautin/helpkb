@@ -1,0 +1,198 @@
+import { React, useEffect, useState, useCallback } from 'react';
+import Head from 'next/head';
+import matter from 'gray-matter';
+import axios from 'axios';
+import { Toaster } from 'react-hot-toast';
+import { useResizeDetector } from 'react-resize-detector';
+import { api, apiReq, notification, clipboard } from '../../components/lib/config';
+import { getUser } from '../../components/lib/user'; 
+import Navbar from '../../components/navbar';
+import Sidebar from '../../components/sidebar';
+import Markdown from '../../components/markdown';
+
+function New() {
+    const [articleContentRaw, setArticleContentRaw] = useState('');
+    const [articleContentMarkdown, setArticleContentMarkdown] = useState('');
+    const [editorHeight, setEditorHeight] = useState(0);
+    const [editorHover, setEditorHover] = useState('');
+
+    // Detect resize of preview and adjust editor to match
+    const onResize = useCallback((w, h) => {
+        setEditorHeight(h);
+    }, []);
+    const { ref } = useResizeDetector({ onResize });
+
+    // Parse markdown content
+    const parseContent = (content) => {
+        try{
+            const parsedContent = matter(content);
+            setArticleContentMarkdown(parsedContent.content);
+        }catch(ex){
+            console.log('Error parsing Markdown content', ex);
+        };
+    }
+
+    useEffect(() => {
+        localStorage.setItem('admin', true);
+        const fetchData = async () => {
+            // Check for a user
+            const userRes = await getUser();
+            if(userRes){
+                localStorage.setItem('userEmail', userRes.email);
+
+    // Set our default article
+    const defaultArticle = `---
+title: Hello world
+url: hello-world
+description: Hello world SEO description
+published: true
+category: General
+pinned: false
+date: ${new Date().toISOString()}
+authorName: ${userRes.name}
+authorEmail: ${userRes.email}
+---
+    
+# Hello world`;
+
+                setArticleContentRaw(defaultArticle);
+                parseContent(defaultArticle);
+            }
+        }
+        fetchData();
+    },[]);
+
+    const handleEditorChange = (event) => {
+        setArticleContentRaw(event.target.value);
+        parseContent(event.target.value);
+    };
+
+    const dropped = (e) => {
+        e.preventDefault();
+        if(e.dataTransfer.files.length !== 1){
+            notification({
+                title: 'Error',
+                type: 'danger',
+                message: 'Only single files supported. Select a single file.'
+            });
+            return;
+        }
+
+        ([...e.dataTransfer.files]).forEach(fileUpload);
+    }
+
+    const dragover = () => {
+        setEditorHover('editorHover');
+    }
+
+    const dragleave = () => {
+        setEditorHover('');
+    }
+
+    const fileUpload = async(file) => {
+        setEditorHover('');
+        const formData = new FormData();
+        formData.append("image", file);
+        const res = await axios.post(`${api()}/api/file/upload`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        // Take the response and form markdown into clipboard
+        const filedata = await res.data;
+        const mkdownUrl = `![alt text](${filedata.url})`;
+        if(clipboard(mkdownUrl)){
+            notification({
+                title: 'Success',
+                type: 'success',
+                message: 'Image markdown copied to clipboard'
+            });
+        }else{
+            notification({
+                title: 'Error',
+                type: 'danger',
+                message: 'Error copying markdown to clipboard'
+            });
+        }
+    }
+
+    const insertArticle = async () => {
+        // Call the API
+        apiReq().put(`${api()}/api/article/insert`, {
+            content: articleContentRaw
+        })
+        .then((res) => {
+            notification({
+                title: 'Success',
+                type: 'success',
+                message: 'Article successfully saved'
+            });
+            window.location.href = `/admin/edit/${res.data.articleId}`;
+        })
+        .catch(function (error) {
+            if(error.response) {
+                notification({
+                    title: 'Error',
+                    type: 'danger',
+                    message: error.response.data.error
+                });
+            }
+        });
+    };
+
+    return (
+        <div>
+            <Head>
+                <title>helpkb - Create article</title>
+                <meta name="description" content="helpkb - Create article"></meta>
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content="helpkb - Create article" />
+                <meta property="og:description" content="helpkb - Create article" />
+            </Head>
+            <Navbar admin={true} />
+            <Toaster/>
+            <div id="layoutSidenav">
+                <Sidebar />
+                <div id="layoutSidenav_content">
+                    <main>
+                        <div className="container-fluid px-4">
+                            <div className="row">
+                                <div className="col-xl-12 mt-3 text-start">
+                                    <div className="heading-wrap ps-2">
+                                        <h1>Create article</h1>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-xl-12 p-0 text-start">
+                                            <div className="pb-3">
+                                                <div className="container-fluid py-2">
+                                                    <div className="row">
+                                                        <div className="col-12 pe-0 text-end">
+                                                            <button className="btn btn-primary mb-2" type="button" onClick={insertArticle}>Create article</button>
+                                                        </div>
+                                                        <div className="col-12">
+                                                            <div className="row editor-wrapper">
+                                                                <div className="col-6">
+                                                                    <textarea className={"form-control " + editorHover} style={{height: editorHeight}} onDrop={dropped} onDragOver={dragover} onDragLeave={dragleave} value={articleContentRaw} onChange={handleEditorChange}></textarea>
+                                                                </div>
+                                                                <div ref={ref} className="col-6 content-raw">
+                                                                    <Markdown>{articleContentMarkdown}</Markdown>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default New
