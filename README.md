@@ -8,6 +8,10 @@ A superfast and easy to use knowledgebase to help your customers get the info th
 
 - [See demo](https://docs.helpkb.org/)
 
+## Website
+
+- [Homepage](https://helpkb.org/)
+
 ## Get started
 
 - [Getting started guide](https://helpkb.org/getting-started/)
