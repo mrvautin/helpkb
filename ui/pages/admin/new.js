@@ -1,6 +1,7 @@
 import { React, useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
 import matter from 'gray-matter';
+import dedent from 'dedent';
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 import { useResizeDetector } from 'react-resize-detector';
@@ -40,20 +41,23 @@ function New() {
             if(userRes){
                 localStorage.setItem('userEmail', userRes.email);
 
-    // Set our default article
-    const defaultArticle = `---
-title: Hello world
-url: hello-world
-description: Hello world SEO description
-published: true
-category: General
-pinned: false
-date: ${new Date().toISOString()}
-authorName: ${userRes.name}
-authorEmail: ${userRes.email}
----
-    
-# Hello world`;
+                // Set our default article
+                const defaultArticle = dedent(`
+                ---
+                title: Hello world
+                seoTitle: hello world - An optional SEO title different to the article
+                url: hello-world
+                description: Hello world SEO description
+                published: true
+                category: General
+                pinned: false
+                date: ${new Date().toISOString()}
+                authorName: ${userRes.name}
+                authorEmail: ${userRes.email}
+                ---
+                    
+                # Hello world
+                `);
 
                 setArticleContentRaw(defaultArticle);
                 parseContent(defaultArticle);

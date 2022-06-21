@@ -37,6 +37,10 @@ function Home() {
             if(!parsedContent.data.description){
                 parsedContent.data.description = stripHtml(contentHtml).result.substring(0, 255).replace(/(\r\n|\n|\r)/gm, '');
             }
+            // If no SEO title found in matter, set default
+            if(!parsedContent.data.seoTitle){
+                parsedContent.data.seoTitle = parsedContent.data.title;
+            }
 
             // Set the data
             setArticleContentMatter(parsedContent.data);
@@ -78,10 +82,10 @@ function Home() {
     return (
         <div>
             <Head>
-                <title>{articleContentMatter.title}</title>
+                <title>{articleContentMatter.seoTitle}</title>
                 <meta name="description" content={articleContentMatter.description}></meta>
                 <meta property="og:type" content="website" />
-                <meta property="og:title" content={articleContentMatter.title} />
+                <meta property="og:title" content={articleContentMatter.seoTitle} />
                 <meta property="og:description" content={articleContentMatter.description} />
                 <meta property="og:url" content={articleContentMatter.url} />
                 <link rel="canonical" href={articleContentMatter.url} />
