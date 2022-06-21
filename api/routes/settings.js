@@ -12,7 +12,8 @@ router.get('/api/settings', async (req, res) => {
     const settings = await SettingModel.findOne({
         where: {
             id: 1
-        }
+        },
+        raw: true
     });
 
     // Check for settings
@@ -20,6 +21,11 @@ router.get('/api/settings', async (req, res) => {
         return res.json({
             error: '404 - Not found'
         });
+    }
+
+    // Add user email
+    if(req.user){
+        settings.userEmail = req.user.email;
     }
 
     // Return settings

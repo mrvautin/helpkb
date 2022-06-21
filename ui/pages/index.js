@@ -19,7 +19,6 @@ function Home() {
 
     useEffect(() => {
         gaTrack();
-        localStorage.setItem('admin', false);
         const fetchData = async () => {
             // Get data
             if(settings.config.indexType === 'categories'){

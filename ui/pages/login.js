@@ -13,10 +13,9 @@ function Login() {
     const [settings, setSettings] = useState({});
     
     useEffect(() => {
-        localStorage.setItem('admin', false);
         const fetchData = async () => {
             // Check for a user
-            const user = await checkUser();
+            const user = await checkUser(true);
             if(user){
                 window.location.href = '/admin/dashboard';
             }
@@ -91,8 +90,6 @@ const handleLogin = async (response) => {
 
     // If logged in, redirect to dashboard
     if(data.email){
-        localStorage.setItem('loggedIn', true);
-        localStorage.setItem('userEmail', data.email);
         window.location.href = '/admin/dashboard';
     }else{
         console.log('Access denied');

@@ -8,7 +8,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { api, apiReq, notification, clipboard } from '../../../components/lib/config';
-import { getUser } from '../../../components/lib/user'; 
+import { checkUser } from '../../../components/lib/user'; 
 import ErrorPage from '../../../components/404';
 import Navbar from '../../../components/navbar';
 import Sidebar from '../../../components/sidebar';
@@ -16,8 +16,8 @@ import Markdown from '../../../components/markdown';
 
 function Article() {
     const router = useRouter();
+    const [user, setUser] = useState();
     const [article, setArticle] = useState({});
-    const [user, setUser] = useState({});
     const [articleContentRaw, setArticleContentRaw] = useState('');
     const [articleContentMarkdown, setArticleContentMarkdown] = useState('');
     const [editorHeight, setEditorHeight] = useState(0);
@@ -38,16 +38,11 @@ function Article() {
         }catch(ex){};
     }
 
-    useEffect(() => {
-        localStorage.setItem('admin', true);        
+    useEffect(() => {    
         let routerPath = router.asPath;
         const fetchData = async () => {
             // Check for a user
-            const user = await getUser();
-            if(user){
-                setUser(user);
-                localStorage.setItem('userEmail', user.email);
-            }
+            setUser(await checkUser());
 
             // Get article
             routerPath = routerPath.replace('/admin/edit/', '');
@@ -183,6 +178,13 @@ function Article() {
             }
         });
     };
+
+    // Check for a user
+    if(!user){
+        return (
+            <></>
+        )
+    }
 
     // Check for data
     if(!article){

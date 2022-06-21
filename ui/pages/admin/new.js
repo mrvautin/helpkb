@@ -6,12 +6,13 @@ import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 import { useResizeDetector } from 'react-resize-detector';
 import { api, apiReq, notification, clipboard } from '../../components/lib/config';
-import { getUser } from '../../components/lib/user'; 
+import { checkUser } from '../../components/lib/user'; 
 import Navbar from '../../components/navbar';
 import Sidebar from '../../components/sidebar';
 import Markdown from '../../components/markdown';
 
 function New() {
+    const [user, setUser] = useState();
     const [articleContentRaw, setArticleContentRaw] = useState('');
     const [articleContentMarkdown, setArticleContentMarkdown] = useState('');
     const [editorHeight, setEditorHeight] = useState(0);
@@ -34,34 +35,30 @@ function New() {
     }
 
     useEffect(() => {
-        localStorage.setItem('admin', true);
         const fetchData = async () => {
             // Check for a user
-            const userRes = await getUser();
-            if(userRes){
-                localStorage.setItem('userEmail', userRes.email);
+            setUser(await checkUser());
+            
+            // Set our default article
+            const defaultArticle = dedent(`
+            ---
+            title: Hello world
+            seoTitle: hello world - An optional SEO title different to the article
+            url: hello-world
+            description: Hello world SEO description
+            published: true
+            category: General
+            pinned: false
+            date: ${new Date().toISOString()}
+            authorName: ${user.name}
+            authorEmail: ${user.email}
+            ---
+                
+            # Hello world
+            `);
 
-                // Set our default article
-                const defaultArticle = dedent(`
-                ---
-                title: Hello world
-                seoTitle: hello world - An optional SEO title different to the article
-                url: hello-world
-                description: Hello world SEO description
-                published: true
-                category: General
-                pinned: false
-                date: ${new Date().toISOString()}
-                authorName: ${userRes.name}
-                authorEmail: ${userRes.email}
-                ---
-                    
-                # Hello world
-                `);
-
-                setArticleContentRaw(defaultArticle);
-                parseContent(defaultArticle);
-            }
+            setArticleContentRaw(defaultArticle);
+            parseContent(defaultArticle);
         }
         fetchData();
     },[]);
@@ -144,6 +141,13 @@ function New() {
             }
         });
     };
+
+    // Check for a user
+    if(!user){
+        return (
+            <></>
+        )
+    }
 
     return (
         <div>

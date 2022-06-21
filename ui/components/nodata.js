@@ -1,11 +1,7 @@
-import { React, useEffect } from 'react';
+import { React } from 'react';
 import Link from 'next/link';
 
 function Nodata(props) {    
-    useEffect(() => {
-        localStorage.setItem('admin', false);
-    }, []);
-
     if(props.admin){
         return (
             <div className="col-xl-12 mt-3 text-start">

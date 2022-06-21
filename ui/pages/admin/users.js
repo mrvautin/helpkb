@@ -7,10 +7,11 @@ import Nodata from '../../components/nodata';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { api, apiReq, notification } from '../../components/lib/config';
-import { getUser } from '../../components/lib/user'; 
+import { checkUser } from '../../components/lib/user'; 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 function Users() {
+    const [user, setUser] = useState();
     const [users, setUsers] = useState();
     const [newuser, setNewUser] = useState({
         name: '',
@@ -18,13 +19,11 @@ function Users() {
     });
     const [showmodal, setShowmodal] = useState(false);
     useEffect(() => {
-        localStorage.setItem('admin', true);
         const fetchData = async () => {
             // Check for a user
-            const user = await getUser();
-            if(user){
-                localStorage.setItem('userEmail', user.email);
-            }
+            setUser(await checkUser());
+
+            // Get current users
             getUsers();
         }
         fetchData();
@@ -94,6 +93,13 @@ function Users() {
                 message: ex.response.data.error || 'Please check inputs before trying again.'
             });
         }
+    }
+
+    // Check for a user
+    if(!user){
+        return (
+            <></>
+        )
     }
 
     if(!users){

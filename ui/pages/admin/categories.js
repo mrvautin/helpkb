@@ -9,10 +9,11 @@ import Button from 'react-bootstrap/Button';
 import SortableList, { SortableItem } from 'react-easy-sort';
 import { arrayMoveImmutable } from 'array-move';
 import { api, apiReq, notification } from '../../components/lib/config';
-import { getUser } from '../../components/lib/user'; 
+import { checkUser } from '../../components/lib/user'; 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 function Categories() {
+    const [user, setUser] = useState();
     const [categories, setCategories] = useState();
     const [newcategory, setNewCategory] = useState({
         name: '',
@@ -20,13 +21,11 @@ function Categories() {
     });
     const [showmodal, setShowmodal] = useState(false);
     useEffect(() => {
-        localStorage.setItem('admin', true);
         const fetchData = async () => {
             // Check for a user
-            const user = await getUser();
-            if(user){
-                localStorage.setItem('userEmail', user.email);
-            }
+            setUser(await checkUser());
+        
+            // Get categories
             getCategories();
         }
         fetchData();
@@ -122,6 +121,13 @@ function Categories() {
             type: 'success',
             message: 'Categories sorted'
         });
+    }
+
+    // Check for a user
+    if(!user){
+        return (
+            <></>
+        )
     }
    
     if(!categories){

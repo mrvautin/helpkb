@@ -5,25 +5,30 @@ import Sidebar from '../../components/sidebar';
 import Searchbar from '../../components/searchbar';
 import Nodata from '../../components/nodata';
 import { callApi, formatDate } from '../../components/lib/data';
-import { getUser } from '../../components/lib/user'; 
+import { checkUser } from '../../components/lib/user'; 
 import { api } from '../../components/lib/config';
 
 function Dashboard() {
+    const [user, setUser] = useState();
     const [articles, setArticles] = useState();
     useEffect(() => {
-        localStorage.setItem('admin', true);
         const fetchData = async () => {
             // Check for a user
-            const user = await getUser();
-            if(user){
-                localStorage.setItem('userEmail', user.email);
-            }
+            setUser(await checkUser());
+
             // Get recent articles
             const res = await callApi(`${api()}/api/admin/search/count/10`, 'get', {}, {});
             setArticles(res);
         }
         fetchData();
     }, []);
+
+    // Check for a user
+    if(!user){
+        return (
+            <></>
+        )
+    }
 
     if(!articles){
         return (

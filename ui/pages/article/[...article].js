@@ -48,7 +48,6 @@ function Home() {
     }
 
     useEffect(() => {
-        localStorage.setItem('admin', false);
         gaTrack();
         const routerPath = router.asPath;
         setUrlPath(routerPath);

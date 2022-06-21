@@ -1,12 +1,12 @@
-import { React, useEffect, useState } from 'react';
+import { React, useEffect, useState, useContext } from 'react';
 import Link from 'next/link';
+import SettingsContext from '../contexts/settings';
 import { logout } from './lib/user';
 
 function Sidebar() {
-    const [email, setEmail] = useState();
+    const settings = useContext(SettingsContext);
     const [width, setWidth] = useState(0);
     useEffect(() => {
-        setEmail(localStorage.getItem('userEmail'));
         // Set default width
         setWidth(window.innerWidth);
 
@@ -29,11 +29,6 @@ function Sidebar() {
         setWidth(window.innerWidth);
     }
 
-    if(!email){
-        return (
-            <></>
-        )
-    }
     return (
         <div id="layoutSidenav_nav">
             <nav className="sb-sidenav sb-sidenav-light">
@@ -79,7 +74,7 @@ function Sidebar() {
                 </div>
                 <div className="sb-sidenav-footer text-start">
                     <div className="small text-center mt-4 mb-2">
-                        {email}
+                        {settings.config.userEmail}
                     </div>
                     <div className="d-grid gap-2">
                         <button className="nav-link btn btn-primary" onClick={logout}>Logout</button>

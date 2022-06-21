@@ -5,24 +5,24 @@ import Navbar from '../../components/navbar';
 import Sidebar from '../../components/sidebar';
 import { api, apiReq, notification } from '../../components/lib/config';
 import SettingsContext from '../../contexts/settings';
-import { getUser } from '../../components/lib/user'; 
+import { checkUser } from '../../components/lib/user'; 
 import Form from 'react-bootstrap/Form';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 function Settings() {
+    const [user, setUser] = useState();
     const settingsContext = useContext(SettingsContext);
     const [settings, setSettings] = useState(settingsContext.config);
 
     useEffect(() => {
-        localStorage.setItem('admin', true);
         const fetchData = async () => {
-            const user = await getUser();
-            if(user){
-                localStorage.setItem('userEmail', user.email);
-            }
+            // Check for logged in user
+            setUser(await checkUser());
         }
         fetchData();
     }, []);
+
+
 
     const saveSettings = async() => {
         // Validate inputs
@@ -72,6 +72,13 @@ function Settings() {
     const confirmSave = async(e) => {
         e.preventDefault()
         saveSettings();
+    }
+
+    // Check for a user
+    if(!user){
+        return (
+            <></>
+        )
     }
 
     if(!settings){

@@ -9,7 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { api, apiReq, notification } from '../../../components/lib/config';
-import { getUser} from '../../../components/lib/user'; 
+import { checkUser} from '../../../components/lib/user'; 
 import { checkUpdatePermissions, checkDeletePermissions } from '../../../../api/lib/auth'; 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
@@ -21,15 +21,11 @@ function User() {
     const [currentUser, setCurrentUser] = useState();
     const [showmodal, setShowmodal] = useState(false);
     useEffect(() => {
-        localStorage.setItem('admin', true);
         let routerPath = router.asPath;
         const fetchData = async () => {
             // Check for a user
-            const userSession = await getUser();
-            if(userSession){
-                setCurrentUser(userSession);
-                localStorage.setItem('userEmail', userSession.email);
-            }
+            setCurrentUser(await checkUser());
+
             // Get users
             routerPath = routerPath.replace('/admin/user/', '');
             const res = await apiReq().get(`${api()}/api/user/${routerPath}`);
@@ -134,9 +130,17 @@ function User() {
         }
     }
 
+    // Cant get user to edit
     if(userError){
         return (
             <ErrorPage />
+        )
+    }
+
+    // Check for a user
+    if(!currentUser){
+        return (
+            <></>
         )
     }
 

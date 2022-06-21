@@ -17,7 +17,6 @@ function Home() {
     const [categoryUrl, setCategoryUrl] = useState();
 
     useEffect(() => {
-        localStorage.setItem('admin', false);
         gaTrack();
         const routerPath = router.asPath;
         const fetchData = async () => {

@@ -6,7 +6,6 @@ const SettingsContext = createContext();
 export const SettingsProvider = ({ children }) => {
     const [data, setData] = useState();
     useEffect(() => {
-        localStorage.setItem('admin', true);
         const fetchData = async () => {
             const [respMenu, respSettings] = await Promise.all([
                 apiReq().get(`${api()}/api/menu`),
