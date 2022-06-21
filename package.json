@@ -32,7 +32,7 @@
     "dev:ui": "cd ui && npx next dev",
     "start:api": "cd api && NODE_ENV=production node app.js",
     "start:ui": "cd ui && NODE_ENV=production npx next start",
-    "start": "npm run build && run-p start:*",
+    "start": "npm run install && npm run build && run-p start:*",
     "dev": "run-p dev:*",
     "prod": "npm run build && npm run start",
     "install:ui": "cd ui && npm install",
