@@ -44,7 +44,7 @@ function Navbar(props) {
                             {settings.menu.map((result, i) => (
                                 <li key={i} className="nav-item">
                                     <Link href={result.url}>
-                                        <a className="nav-link">{result.name}</a>
+                                        <a className="nav-link" target="_blank">{result.name}</a>
                                     </Link>   
                                 </li>
                             ))}
