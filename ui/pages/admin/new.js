@@ -37,7 +37,8 @@ function New() {
     useEffect(() => {
         const fetchData = async () => {
             // Check for a user
-            setUser(await checkUser());
+            const user = await checkUser();
+            setUser(user);
             
             // Set our default article
             const defaultArticle = dedent(`
