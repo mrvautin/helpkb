@@ -1,8 +1,8 @@
 <img src="https://helpkb.org/content/images/logo-text.jpg" height="236" width="832">
 
-A superfast and easy to use knowledgebase to help your customers get the info they need, when they need it most.
+A superfast and easy to use knowledge base to help your customers get the info they need, when they need it most.
 
-[helpkb](https://helpkb.org/) is an open-source [Next.js](https://nextjs.org) (A [React](https://reactjs.org/) framework) knowledgebase or FAQ which is super fast, easy to use and quick to develop.
+[helpkb](https://helpkb.org/) is an open-source [Next.js](https://nextjs.org) (A [React](https://reactjs.org/) framework) knowledge base or FAQ which is super fast, easy to use and quick to develop.
 
 ## Demo
 

@@ -74,7 +74,7 @@ function Searchbar(props) {
             <div className="searchbar-wrapper col-12 col-md-8 offset-md-2">
                 {welcomeMessage()}
                 <div className="input-group mt-2">
-                    <input type="text" className="form-control form-control-lg" value={searchterm} onChange={searchInputChange} placeholder={props.placeholder || 'Search the knowledgebase'} />
+                    <input type="text" className="form-control form-control-lg" value={searchterm} onChange={searchInputChange} placeholder={props.placeholder || 'Search the knowledge base'} />
                     <button className="btn btn-outline-primary" type="button" onClick={queryAPI} id="button-addon2">Search</button>
                 </div>
                 <ul id="search-results" className={"list-group col-12 pe-4 " + resultsShow}>
