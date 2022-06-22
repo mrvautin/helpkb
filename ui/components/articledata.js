@@ -18,7 +18,7 @@ function Articledata(props) {
         )
     }
 
-    if(settings.config.showArticleDetails === 1){
+    if(settings.config.showArticleDetails === true){
         return (
             <div className="mt-5">
                 <div className="card">

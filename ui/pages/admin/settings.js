@@ -143,9 +143,9 @@ function Settings() {
                                                             </div>
                                                             <div className="mb-3">
                                                                 <label htmlFor="showArticleDetails" className="form-label">Show article details</label>
-                                                                <Form.Select aria-label="showArticleDetails" value={settings.showArticleDetails} onChange={(evt) => { setSettings({ ...settings, showArticleDetails: parseInt(evt.target.value)}); }}>
-                                                                    <option value={0}>Hide</option>
-                                                                    <option value={1}>Show</option>
+                                                                <Form.Select aria-label="showArticleDetails" value={settings.showArticleDetails} onChange={(evt) => { setSettings({ ...settings, showArticleDetails: evt.target.value}); }}>
+                                                                    <option value={false}>Hide</option>
+                                                                    <option value={true}>Show</option>
                                                                 </Form.Select>
                                                             </div>
                                                             <div className="mb-3">
