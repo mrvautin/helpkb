@@ -42,13 +42,13 @@ function Users() {
     }
 
     const userType = (user) => {
-        if(user.admin === 1){
+        if(user.admin === true){
             return 'admin';
         }
         return 'regular';
     }
     const userOwner = (user) => {
-        if(user.owner === 1){
+        if(user.owner === true){
             return 'true';
         }
         return 'false';
