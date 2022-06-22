@@ -80,7 +80,7 @@ if (process.env.NODE_ENV === 'test') {
 app.use(cors({
     origin: [
         process.env.BASE_URL,
-        `http://localhost:${process.env.UI_PORT}`
+        `http://localhost:${process.env.UI_PORT}`,
         `http://lvh.me:${process.env.UI_PORT}`
     ],
     credentials: true
