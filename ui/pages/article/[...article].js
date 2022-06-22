@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import Head from 'next/head';
 import matter from 'gray-matter';
 import { stripHtml } from 'string-strip-html';
@@ -13,56 +13,73 @@ import Footer from '../../components/footer';
 import { gaTrack } from '../../components/lib/ga';
 import Markdown from '../../components/markdown';
 
-function Home() {
-    const router = useRouter();
-    const [article, setArticle] = useState();
-    const [articleContentMatter, setArticleContentMatter] = useState('');
-    const [articleContentMarkdown, setArticleContentMarkdown] = useState('');
-    const [urlPath, setUrlPath] = useState();
+export async function getServerSideProps(context) {
+    // Fetch article
+    try{
+        const query = context.query;
+        const articleSlug = query.article[0];
+        const article = await callApi(`${api()}/api/article/${articleSlug}`, 'get', {}, {});
 
-    const parseContent = (article) => {
-        try{
-            // Parse our content
-            const parsedContent = matter(article.content);
-            setArticleContentMarkdown(parsedContent.content);
-
-            // Set category
-            if(!parsedContent.data.category){
-                parsedContent.data.category = article.category || 'General';
+        // If article not found
+        if(article.error){
+            return {
+                props: {
+                    article: {
+                        error: 'Article not found',
+                        url: `/article/${articleSlug}`
+                    }
+                }
             }
+        }
 
-            // SEO stuff
-            parsedContent.data.url = `${process.env.NEXT_PUBLIC_BASE_URL}/article/${parsedContent.data.url}`;
-            // If description not set, grab from our content
-            if(!parsedContent.data.description){
-                parsedContent.data.description = stripHtml(contentHtml).result.substring(0, 255).replace(/(\r\n|\n|\r)/gm, '');
+        // Parse our content
+        const parsedContent = matter(article.content);
+        parsedContent.data.content = parsedContent.content;
+
+        // Set category
+        if(!parsedContent.data.category){
+            parsedContent.data.category = article.category || 'General';
+        }
+
+        // Fix date
+        if(parsedContent.data.date){
+            parsedContent.data.date = parsedContent.data.date.toString();
+        }
+
+        // SEO stuff
+        parsedContent.data.url = `${process.env.NEXT_PUBLIC_BASE_URL}/article/${article.url}`;
+        // If description not set, grab from our content
+        if(!parsedContent.data.description){
+            parsedContent.data.description = stripHtml(contentHtml).result.substring(0, 255).replace(/(\r\n|\n|\r)/gm, '');
+        }
+        // If no SEO title found in matter, set default
+        if(!parsedContent.data.seoTitle){
+            parsedContent.data.seoTitle = parsedContent.data.title;
+        }
+        
+        // Return our data
+        return {
+            props: {
+                article: parsedContent.data
             }
-            // If no SEO title found in matter, set default
-            if(!parsedContent.data.seoTitle){
-                parsedContent.data.seoTitle = parsedContent.data.title;
+        }
+    }catch(ex){
+        console.log('Ex. Failed to fetch article data', ex);
+        return {
+            props: {
+                article: {
+                    error: 'Failed to fetch article data',
+                    url: `/article/${context.article[0]}`
+                }
             }
+        }
+    } 
+}
 
-            // Set the data
-            setArticleContentMatter(parsedContent.data);
-        }catch(ex){};
-    }
-
+function Home({article}) {
     useEffect(() => {
         gaTrack();
-        const routerPath = router.asPath;
-        setUrlPath(routerPath);
-        const fetchData = async () => {
-            // Grab the article
-            const article = await callApi(`${api()}/api${routerPath}`, 'get', {}, {});
-            setArticle(article);
-
-            // Parse matter and markdown
-            parseContent(article);
-        };
-        if(routerPath !== '/article/[...article]'){
-            fetchData();
-        }
-    },[router.asPath]);
+    });
 
     // Check for data
     if(!article){
@@ -74,20 +91,20 @@ function Home() {
     // Check for error
     if(article && article.error){
         return (
-            <ErrorPage url={urlPath} />
+            <ErrorPage url={article.url} />
         )
     }
 
     return (
         <div>
             <Head>
-                <title>{articleContentMatter.seoTitle}</title>
-                <meta name="description" content={articleContentMatter.description}></meta>
+                <title>{article.seoTitle}</title>
+                <meta name="description" content={article.description}></meta>
                 <meta property="og:type" content="website" />
-                <meta property="og:title" content={articleContentMatter.seoTitle} />
-                <meta property="og:description" content={articleContentMatter.description} />
-                <meta property="og:url" content={articleContentMatter.url} />
-                <link rel="canonical" href={articleContentMatter.url} />
+                <meta property="og:title" content={article.seoTitle} />
+                <meta property="og:description" content={article.description} />
+                <meta property="og:url" content={article.url} />
+                <link rel="canonical" href={article.url} />
             </Head>
             <Navbar admin={false} />
             <div id="layoutSidenav">
@@ -101,8 +118,8 @@ function Home() {
                                         <h1 className="display-5 mt-5 fw-bold">
                                             {article.title}
                                         </h1>
-                                        <Markdown>{articleContentMarkdown}</Markdown>
-                                        <Articledata article={articleContentMatter}></Articledata>
+                                        <Markdown>{article.content}</Markdown>
+                                        <Articledata article={article}></Articledata>
                                     </div>
                                 </div>
                             </div>
