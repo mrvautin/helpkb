@@ -20,11 +20,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
         <Component {...pageProps} />
       </SettingsProvider>
       <Script 
-        async 
         src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js" 
         integrity="sha512-pax4MlgXjHEPfCwcJLQhigY7+N8rt6bVvWLFyUMuxShv170X53TRzGPmPkZmGBhk+jikR8WBM4yl7A9WMHHqvg==" 
         crossOrigin="anonymous"
         referrerPolicy="no-referrer"
+        strategy="lazyOnload"
       ></Script>
     </>
   )

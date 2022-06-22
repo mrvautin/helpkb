@@ -1,17 +1,17 @@
-import { React, useEffect, useState } from 'react';
-// import { useRouter } from 'next/router';
+import { React, useEffect } from 'react';
 import Head from 'next/head';
 import matter from 'gray-matter';
 import { stripHtml } from 'string-strip-html';
 import { callApi } from '../../components/lib/data';
 import { api } from '../../components/lib/config';
-import Articledata from '../../components/articledata';
-import ErrorPage from '../../components/404';
-import Navbar from '../../components/navbar';
-import Searchbar from '../../components/searchbar';
-import Footer from '../../components/footer';
 import { gaTrack } from '../../components/lib/ga';
-import Markdown from '../../components/markdown';
+import dynamic from 'next/dynamic';
+const Articledata = dynamic(() => import('../../components/articledata'));
+const ErrorPage = dynamic(() => import('../../components/404'));
+const Navbar = dynamic(() => import('../../components/navbar'));
+const Searchbar = dynamic(() => import('../../components/searchbar'));
+const Footer = dynamic(() => import('../../components/footer'));
+const Markdown = dynamic(() => import('../../components/markdown'));
 
 export async function getServerSideProps(context) {
     // Fetch article
