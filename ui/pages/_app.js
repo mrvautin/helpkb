@@ -3,7 +3,6 @@ import Script from 'next/script';
 import { SettingsProvider } from '../contexts/settings';
 import '../styles/index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import NextNProgress from 'nextjs-progressbar';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {

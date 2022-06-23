@@ -5,13 +5,12 @@ import { stripHtml } from 'string-strip-html';
 import { callApi } from '../../components/lib/data';
 import { api } from '../../components/lib/config';
 import { gaTrack } from '../../components/lib/ga';
-import dynamic from 'next/dynamic';
-const Articledata = dynamic(() => import('../../components/articledata'));
-const ErrorPage = dynamic(() => import('../../components/404'));
-const Navbar = dynamic(() => import('../../components/navbar'));
-const Searchbar = dynamic(() => import('../../components/searchbar'));
-const Footer = dynamic(() => import('../../components/footer'));
-const Markdown = dynamic(() => import('../../components/markdown'));
+import Articledata from '../../components/articledata';
+import ErrorPage from '../../components/404';
+import Navbar from '../../components/navbar';
+import Searchbar from '../../components/searchbar';
+import Footer from '../../components/footer';
+import Markdown from '../../components/markdown';
 
 export async function getServerSideProps(context) {
     // Fetch article
