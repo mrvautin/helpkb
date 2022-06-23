@@ -2,10 +2,9 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { SettingsProvider } from '../contexts/settings';
 import '../styles/index.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import NextNProgress from 'nextjs-progressbar';
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+function App({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <>
       <Head>
@@ -19,14 +18,14 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
         <Component {...pageProps} />
       </SettingsProvider>
       <Script 
-        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js" 
-        integrity="sha512-pax4MlgXjHEPfCwcJLQhigY7+N8rt6bVvWLFyUMuxShv170X53TRzGPmPkZmGBhk+jikR8WBM4yl7A9WMHHqvg==" 
-        crossOrigin="anonymous"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" 
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" 
+        crossorigin="anonymous"
         referrerPolicy="no-referrer"
         strategy="lazyOnload"
-      ></Script>
+      />
     </>
   )
 }
 
-export default MyApp
+export default App

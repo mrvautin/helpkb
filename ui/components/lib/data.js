@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
-import axios from 'axios';
-import { api } from './config';
+import matter from 'gray-matter';
+import { stripHtml } from 'string-strip-html';
 
 export async function callApi(endpoint, type, payload, user) {
     let res;
@@ -47,6 +47,35 @@ export async function callApi(endpoint, type, payload, user) {
         }
     }
     return {};
+}
+
+export function parseContent(article){
+    // Parse our content
+    const parsedContent = matter(article.content);
+    parsedContent.data.content = parsedContent.content;
+
+    // Set category
+    if(!parsedContent.data.category){
+        parsedContent.data.category = article.category || 'General';
+    }
+
+    // Fix date
+    if(parsedContent.data.date){
+        parsedContent.data.date = parsedContent.data.date.toString();
+    }
+
+    // SEO stuff
+    parsedContent.data.url = `${process.env.NEXT_PUBLIC_BASE_URL}/article/${article.url}`;
+    // If description not set, grab from our content
+    if(!parsedContent.data.description){
+        parsedContent.data.description = stripHtml(contentHtml).result.substring(0, 255).replace(/(\r\n|\n|\r)/gm, '');
+    }
+    // If no SEO title found in matter, set default
+    if(!parsedContent.data.seoTitle){
+        parsedContent.data.seoTitle = parsedContent.data.title;
+    }
+
+    return parsedContent.data;
 }
 
 export function capsFirst(string) {

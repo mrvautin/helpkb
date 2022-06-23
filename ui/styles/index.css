@@ -94,6 +94,7 @@ code {
   height: 40px;
   font-size: 1.7em;
   padding-left: 8px;
+  padding-top: 0 !important;
 }
 
 .admin-brand:hover{
