@@ -16,8 +16,7 @@ function Navbar(props) {
                 <nav className="sb-topnav navbar">
                     <Link href="/admin/dashboard">
                         <a className="navbar-brand">
-                            <Image src="/images/logo-small.png" className="align-self-center" width={30} height={30} alt="helpkb logo" />
-                            <span className="align-top ms-2">helpkb</span>
+                            <Image src="/images/logo-text.png" className="align-top pt-0" width={104} height={40} alt="helpkb logo" />
                         </a>
                     </Link>
                     <button className="btn btn-primary btn-sm d-block d-sm-none order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" onClick={toggleSidebar} href="#!">
@@ -34,7 +33,7 @@ function Navbar(props) {
                 <div className="container-fluid">
                     <Link href="/">
                         <a className="navbar-brand">
-                            <Image src="/images/logo-text.png" className="align-top pt-0" width={120} height={40} alt="helpkb logo" />
+                            <Image src="/images/logo-text.png" className="align-top pt-0" width={104} height={40} alt="helpkb logo" />
                         </a>
                     </Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
