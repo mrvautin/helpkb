@@ -68,7 +68,7 @@ function Home() {
     // Check for data
     if(!article){
         return (
-            <Spinner />
+            <Spinner loading={true} />
         )
     }
 

@@ -79,14 +79,14 @@ function Home() {
     // Check for settings
     if(!settings.config){
         return (
-            <Spinner />
+            <Spinner loading={true} />
         )
     }
 
     // Check for data
     if(!data){
         return (
-            <Spinner />
+            <Spinner loading={true} />
         )
     }
 

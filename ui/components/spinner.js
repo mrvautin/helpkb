@@ -4,7 +4,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 const spinnerStyle = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
 
 function Spinner(props) {
-    if(!props.loading || props.loading === true){
+    if(props.loading === true){
         return (
             <div className="container px-4">
                 <div className="row">
