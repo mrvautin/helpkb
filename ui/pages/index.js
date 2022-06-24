@@ -1,11 +1,11 @@
 import { React, useEffect, useState, useContext } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import ClipLoader from 'react-spinners/ClipLoader';
 import { callApi, formatDate } from '../components/lib/data';
 import { api } from '../components/lib/config';
 import SettingsContext from '../contexts/settings';
 import Navbar from '../components/navbar';
+import Spinner from '../components/spinner';
 import Searchbar from '../components/searchbar';
 import Footer from '../components/footer';
 import { gaTrack } from '../components/lib/ga';
@@ -13,9 +13,6 @@ import { gaTrack } from '../components/lib/ga';
 function Home() {
     const settings = useContext(SettingsContext);
     const [data, setData] = useState();
-
-    // Setup the spinner style
-    const spinnerStyle = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
 
     useEffect(() => {
         gaTrack();
@@ -82,26 +79,14 @@ function Home() {
     // Check for settings
     if(!settings.config){
         return (
-            <div className="container px-4">
-                <div className="row">
-                    <div className="col-xl-12 p-0 text-center" style={spinnerStyle}>
-                        <ClipLoader className="align-middle" color="#000000" loading={true} size={150} />
-                    </div>
-                </div>
-            </div>
+            <Spinner />
         )
     }
 
     // Check for data
     if(!data){
         return (
-            <div className="container px-4">
-                <div className="row">
-                    <div className="col-xl-12 p-0 text-center" style={spinnerStyle}>
-                        <ClipLoader className="align-middle" color="#000000" loading={true} size={150} />
-                    </div>
-                </div>
-            </div>
+            <Spinner />
         )
     }
 

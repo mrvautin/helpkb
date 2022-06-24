@@ -2,8 +2,8 @@ import { React, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { Toaster } from 'react-hot-toast';
 import SocialButton from '../components/socialbutton';
-import ClipLoader from 'react-spinners/ClipLoader';
 import Navbar from '../components/navbar';
+import Spinner from '../components/spinner';
 import { api, apiReq, notification } from '../components/lib/config';
 import { checkUser } from '../components/lib/user'; 
 import { gaTrack } from '../components/lib/ga';
@@ -57,7 +57,7 @@ function Login() {
                         <div className="row login-wrapper align-items-center">
                             <div className="mt-0 text-center">
                                 <h1 className={loading ? 'd-none' : 'h3 mb-3 fw-normal'}>Please sign in</h1>
-                                <ClipLoader color="#000000" loading={loading} size={150} />
+                                <Spinner loading={loading} />
                                 <SocialButton
                                     className={loading ? 'd-none' : 'btn btn-dark'}
                                     provider="github"
