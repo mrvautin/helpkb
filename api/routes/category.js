@@ -19,6 +19,12 @@ router.get('/api/category/:category', async(req, res) => {
         raw: true
     });
 
+    if(!category){
+        return res.status(404).json({
+            error: '404 - Not found'
+        });
+    }
+
     // Run DB query
     const articles = await ArticleModel.findAll({
         where: {
@@ -37,8 +43,13 @@ router.get('/api/category/:category', async(req, res) => {
         raw: true
     });
 
+
+
     // Return category articles
-    return res.json(articles);
+    return res.json({
+        articles,
+        category
+    });
 });
 
 router.get('/api/categories', async(req, res) => {

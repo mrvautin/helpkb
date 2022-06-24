@@ -24,7 +24,8 @@ test('[GET] Get category', async t => {
         .get(`/api/category/${category.url}`)
         .expect(200);
 
-    t.deepEqual(res.body[0].category, category.name);
+    t.deepEqual(res.body.category.name, category.name);
+    t.deepEqual(res.body.articles.length > 0, true);
 });
 
 test('[DELETE] Delete a category', async t => {
