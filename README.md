@@ -1,4 +1,4 @@
-<img src="https://helpkb.org/content/images/logo-text.jpg" height="236" width="832">
+<img src="https://helpkb.org/content/images/logo-text.jpg" height="99" width="350">
 
 A superfast and easy to use knowledge base to help your customers get the info they need, when they need it most.
 
