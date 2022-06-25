@@ -48,7 +48,6 @@ function Home() {
 
     // Check for data
     if(!categoryArticles){
-        console.log('here555?');
         return (
             <></>
         )
@@ -109,7 +108,7 @@ function Home() {
                 <link rel="canonical" href={process.env.NEXT_PUBLIC_BASE_URL + categoryUrl} />
             </Head>
             <Navbar admin={false} />
-            <div id="layoutSidenav">
+            <div>
                 <main>
                     <div className="container px-4">
                         <div className="row">

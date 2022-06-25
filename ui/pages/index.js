@@ -102,7 +102,7 @@ function Home() {
                 <link rel="canonical" href={process.env.NEXT_PUBLIC_BASE_URL} />
             </Head>
             <Navbar admin={false} />
-            <div id="layoutSidenav">
+            <div>
                 <main>
                     <div className="container px-4">
                         <div className="row">

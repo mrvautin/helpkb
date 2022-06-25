@@ -51,7 +51,7 @@ function Login() {
             </Head>
             <Navbar admin={false} />
             <Toaster/>
-            <div id="layoutSidenav">
+            <div>
                 <main>
                     <div className="container-fluid px-4">
                         <div className="row login-wrapper align-items-center">

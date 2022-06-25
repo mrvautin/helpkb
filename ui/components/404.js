@@ -16,7 +16,7 @@ function ErrorPage(props) {
                 <link rel="canonical" href={process.env.NEXT_PUBLIC_BASE_URL + props.url} />
             </Head>
             <Navbar />
-            <div id="layoutSidenav">
+            <div>
                 <main>
                     <div className="container-fluid px-4">
                         <div className="row">

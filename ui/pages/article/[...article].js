@@ -91,7 +91,7 @@ function Home() {
                 <link rel="canonical" href={articleContentMatter.url} />
             </Head>
             <Navbar admin={false} />
-            <div id="layoutSidenav">
+            <div>
                 <main>
                     <div className="container px-4">
                         <div className="row">
