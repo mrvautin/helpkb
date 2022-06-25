@@ -11,7 +11,7 @@
     "gray-matter": "^4.0.3",
     "next": "latest",
     "nextjs-progressbar": "^0.0.14",
-    "react": "latest",
+    "preact": "^10.8.2",
     "react-bootstrap": "^2.4.0",
     "react-confirm-alert": "^2.8.0",
     "react-dom": "latest",
