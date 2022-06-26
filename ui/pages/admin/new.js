@@ -1,4 +1,4 @@
-import { React, useEffect, useState, useCallback } from 'react';
+import { React, useEffect, useState } from 'react';
 import Head from 'next/head';
 import matter from 'gray-matter';
 import dedent from 'dedent';
@@ -15,14 +15,16 @@ function New() {
     const [user, setUser] = useState();
     const [articleContentRaw, setArticleContentRaw] = useState('');
     const [articleContentMarkdown, setArticleContentMarkdown] = useState('');
-    const [editorHeight, setEditorHeight] = useState(0);
+    const [editorHeight, setEditorHeight] = useState(100);
     const [editorHover, setEditorHover] = useState('');
 
     // Detect resize of preview and adjust editor to match
-    const onResize = useCallback((w, h) => {
-        setEditorHeight(h);
-    }, []);
-    const { ref } = useResizeDetector({ onResize });
+    const { ref } = useResizeDetector({
+        onResize: (w, h) => {
+            // on resize logic
+            setEditorHeight(h);
+        }
+    });
 
     // Parse markdown content
     const parseContent = (content) => {
