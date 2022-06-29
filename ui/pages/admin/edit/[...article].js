@@ -232,7 +232,7 @@ function Article() {
                                                                 <button className="btn btn-primary" type="button" onClick={saveArticle}>Save Article</button>
                                                             </div>
                                                         </div>
-                                                        <div className="col-12">
+                                                        <div className="col-12 ps-0 pe-0">
                                                             <div className="row editor-wrapper">
                                                                 <div className="col-6">
                                                                     <textarea className={"form-control " + editorHover} style={{height: editorHeight}} onDrop={dropped} onDragOver={dragover} onDragLeave={dragleave} onKeyDown={handleKeyDown} value={articleContentRaw} onChange={handleEditorChange}></textarea>

@@ -181,7 +181,7 @@ function New() {
                                                         <div className="col-12 pe-0 text-end">
                                                             <button className="btn btn-primary mb-2" type="button" onClick={insertArticle}>Create article</button>
                                                         </div>
-                                                        <div className="col-12">
+                                                        <div className="col-12 ps-0 pe-0">
                                                             <div className="row editor-wrapper">
                                                                 <div className="col-6">
                                                                     <textarea className={"form-control " + editorHover} style={{height: editorHeight}} onDrop={dropped} onDragOver={dragover} onDragLeave={dragleave} value={articleContentRaw} onChange={handleEditorChange}></textarea>
