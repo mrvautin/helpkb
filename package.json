@@ -32,12 +32,12 @@
     "dev:ui": "cd ui && npx next dev",
     "start:api": "cd api && NODE_ENV=production node app.js",
     "start:ui": "cd ui && NODE_ENV=production npx next start",
-    "start": "npm run install && npm run build && run-p start:*",
-    "dev": "run-p dev:*",
+    "start": "npm run install && npm run build && npm run start:api & npm run start:ui",
+    "dev": "npm run dev:api & npm run dev:ui",
     "prod": "npm run build && npm run start",
     "install:ui": "cd ui && npm install",
     "install:api": "cd api && npm install",
-    "install": "run-p install:*",
+    "install": "npm run install:ui && npm run install:api",
     "build": "cd ui && npx next build",
     "deploy": "pm2 deploy production",
     "lint": "cd ui && npx next lint",
@@ -45,8 +45,7 @@
     "setup": "cd api && node setup.js"
   },
   "dependencies": {
-    "next": "^12.1.6",
-    "npm-run-all": "^4.1.5"
+    "next": "^12.1.6"
   },
   "devDependencies": {
     "eslint": "^8.18.0"
