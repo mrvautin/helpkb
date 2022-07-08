@@ -25,6 +25,7 @@ nextjs-pm2-deploy.sh
 /ui/public/images/logo.pxd
 
 # temp files
+/ui/public/uploads
 /api/uploads
 /api/tmp
 
