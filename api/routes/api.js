@@ -314,7 +314,7 @@ router.post('/api/file/upload', restrict, async(req, res) => {
 
         // Move the file
         try{
-            const uploads = path.join(__dirname, '..', '..', 'api', 'uploads');
+            const uploads = path.join(__dirname, '..', '..', 'ui', 'public', 'uploads');
             const fileName = file.name.replace(/\s+/g, '-');
             const filePath = path.join(uploads, fileName);
             let urlPath = `/files/${fileName}`;

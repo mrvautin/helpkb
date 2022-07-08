@@ -11,7 +11,7 @@ const router = express.Router();
 const ArticleModel = require('../models/articles');
 
 router.get('/files/:imgname', (req, res) => {
-    const imagePath = path.join(__dirname, '..', 'uploads', req.params.imgname);
+    const imagePath = path.join(__dirname, '..', '..', 'ui', 'public', 'uploads', req.params.imgname);
     try{
         if (fs.existsSync(imagePath)) {
             res.sendFile(imagePath);
