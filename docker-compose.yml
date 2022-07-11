@@ -1,0 +1,54 @@
+version: '3'
+services:
+  api:
+    image: node:16
+    hostname: helpkb_api
+    ports:
+      - 4000:4000
+    volumes:
+      - ./api:/usr/local/app
+    depends_on:
+      - db
+    restart: always
+    working_dir: /usr/local/app
+    entrypoint: "/bin/bash"
+    command: "-c \"if [ ! -d \"node_modules\" ]; then npm i; fi; node app.js\""
+    environment:
+      # Set environment variables: https://github.com/vercel/next.js/discussions/15651
+      - NODE_ENV=development
+      - DB_HOST=helpkb_db
+      - DB_PORT=5432
+      - DB_NAME=helpkb-test
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=helpkb
+      - BASE_URL=http://localhost:3000
+      - SESSION_SECRET=random-string
+      - GITHUB_CLIENT_ID=github-client-id
+      - GITHUB_SECRET=github-secret
+      - NEXT_PUBLIC_GITHUB_CLIENTID=github-client-id
+  db:
+    image: postgres
+    hostname: helpkb_db
+    restart: always
+    command: -p 5432
+    ports:
+      - 5432
+    environment:
+      POSTGRES_DB: helpkb-test
+      POSTGRES_PASSWORD: helpkb
+      POSTGRES_USER: postgres
+  ui:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./ui:/var/helpkb
+    command: npx next dev
+    ports:
+      - 3000:3000
+    environment:
+      - UI_PORT=3000
+      - API_PORT=4000
+      - NODE_ENV=development
+      - HOSTNAME=http://localhost
+      - BASE_API_URL=http://localhost:4000
