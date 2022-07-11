@@ -10,7 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { api, apiReq, notification } from '../../../components/lib/config';
 import { checkUser} from '../../../components/lib/user'; 
-import { checkUpdatePermissions, checkDeletePermissions } from '../../../../api/lib/auth'; 
+import { checkUpdatePermissions, checkDeletePermissions } from '../../../components/lib/auth'; 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 function User() {
