@@ -22,8 +22,8 @@ services:
       - DB_USERNAME=postgres
       - DB_PASSWORD=helpkb
       - UI_PORT=3000
-      - BASE_URL=http://localhost:3000
-      - BASE_API_URL=http://localhost:4000
+      - BASE_URL=http://localhost
+      - BASE_API_URL=http://localhost
       - SESSION_SECRET=random-string
       - GITHUB_CLIENT_ID=github-client-id
       - GITHUB_SECRET=github-secret
@@ -31,7 +31,6 @@ services:
   db:
     image: postgres
     hostname: helpkb_db
-    restart: always
     command: -p 5432
     ports:
       - 5432
@@ -39,14 +38,24 @@ services:
       POSTGRES_DB: helpkb-test
       POSTGRES_PASSWORD: helpkb
       POSTGRES_USER: postgres
+  nginx:
+    build: 
+      context: .
+      dockerfile: Dockerfile-nginx
+    depends_on:
+      - db
+      - api
+      - ui
+    ports:
+      - 80:80
   ui:
     hostname: helpkb_ui
     build: 
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./ui:/var/helpkb
-    command: npx next dev
+      - /app
+    command: npm run dev:ui
     depends_on:
       - api
       - db
@@ -58,7 +67,7 @@ services:
       - API_PORT=4000
       - NODE_ENV=development
       - HOSTNAME=http://localhost
-      - BASE_URL=http://localhost:3000
-      - BASE_API_URL=http://localhost:4000
-      - NEXT_PUBLIC_BASE_URL=http://localhost:3000
-      - NEXT_PUBLIC_BASE_API_URL=http://localhost:4000
+      - BASE_URL=http://localhost
+      - BASE_API_URL=http://localhost
+      - NEXT_PUBLIC_BASE_URL=http://localhost
+      - NEXT_PUBLIC_BASE_API_URL=http://localhost
