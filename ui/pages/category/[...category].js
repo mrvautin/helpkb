@@ -30,7 +30,7 @@ function Home() {
             if(!categoryRes.error){
                 setCategoryName(categoryRes.category.name)
                 setCategoryArticles(categoryRes.articles);
-                setCategoryUrl(categoryRes.category.url);
+                setCategoryUrl(`/${categoryRes.category.url}`);
             }else{
                 setCategoryError(true);
             }
@@ -63,6 +63,33 @@ function Home() {
         }
     }
 
+    const structuredData = () => {
+        const data = {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: []
+        }
+
+        // Push our FAQs
+        categoryArticles.map((result, i) => {
+            const question = {
+                '@type': 'Question',
+                'name': result.title,
+                'acceptedAnswer': {
+                    '@type': 'Answer',
+                    'text': result.title
+                }
+            }
+            data.mainEntity.push(question);
+        });
+        return (
+            <script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+            />
+        )
+    }
+
     const getContent = () => {
         if(categoryArticles.length === 0){
             return (
@@ -81,7 +108,6 @@ function Home() {
                                 <a href={"/article/" + result.url}>{result.title}</a>
                             </div>
                             <div className="col-12 col-md-3 text-end">
-                                
                             </div>
                             <div className="col-md-3 text-end d-none d-sm-block">
                                 <div>
@@ -106,6 +132,7 @@ function Home() {
                 <meta property="og:description" content={"Currently showing articles within category: " + categoryName} />
                 <meta property="og:url" content={process.env.NEXT_PUBLIC_BASE_URL + categoryUrl} />
                 <link rel="canonical" href={process.env.NEXT_PUBLIC_BASE_URL + categoryUrl} />
+                {structuredData()}
             </Head>
             <Navbar admin={false} />
             <div>

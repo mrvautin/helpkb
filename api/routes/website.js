@@ -9,6 +9,7 @@ const router = express.Router();
 
 // DB models
 const ArticleModel = require('../models/articles');
+const CategoryModel = require('../models/categories');
 
 router.get('/files/:imgname', (req, res) => {
     const imagePath = path.join(__dirname, '..', '..', 'ui', 'public', 'uploads', req.params.imgname);
@@ -63,20 +64,16 @@ router.get('/sitemap.xml', async(req, res) => {
         });
 
         // Get categories from the db
-        const categories = await ArticleModel.findAll({
-            attributes: [
-                'category',
-                [db().fn('COUNT', db().col('*')), 'count'],
+        const categories = await CategoryModel.findAll({
+            order: [
+                [ 'order', 'ASC' ]
             ],
-            where: {
-                published: true
-            },
-            group: 'category'
+            raw: true
         });
 
         // Loop categories and add the URL
         categories.forEach((category) => {
-            smStream.write({ url: `/category/${category.category.toLowerCase()}`, changefreq: 'daily', priority: 0.7 })
+            smStream.write({ url: `/category/${category.url}`, changefreq: 'daily', priority: 0.7 })
         });
 
         // End the stream
