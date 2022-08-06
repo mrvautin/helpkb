@@ -30,6 +30,7 @@ router.get('/robots.txt', (req, res) => {
     const robots = `
     User-agent: Googlebot
     Disallow: /admin/
+    Disallow: /_next/
 
     User-agent: *
     Allow: /
