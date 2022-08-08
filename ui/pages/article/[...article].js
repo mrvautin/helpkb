@@ -77,6 +77,7 @@ function Home({article}) {
                 <meta name="description" content={article.description}></meta>
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content={article.seoTitle} />
+                <meta property="og:image" content={process.env.NEXT_PUBLIC_BASE_URL + "/images/logo-text.png"} />
                 <meta property="og:description" content={article.description} />
                 <meta property="og:url" content={article.url} />
                 <link rel="canonical" href={article.url} />

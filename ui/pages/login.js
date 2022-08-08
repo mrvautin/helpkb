@@ -45,6 +45,7 @@ function Login() {
                 <meta name="description" content="helpkb - Login"></meta>
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content="helpkb - Login" />
+                <meta property="og:image" content={process.env.NEXT_PUBLIC_BASE_URL + "/images/logo-text.png"} />
                 <meta property="og:description" content="helpkb - Login" />
                 <meta property="og:url" content={process.env.NEXT_PUBLIC_BASE_URL + "/login"} />
                 <link rel="canonical" href={process.env.NEXT_PUBLIC_BASE_URL + "/login"} />

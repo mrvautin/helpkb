@@ -129,6 +129,7 @@ function Home() {
                 <meta name="description" content={"Currently showing articles within category: " + categoryName}></meta>
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content={"Category: " + categoryName} />
+                <meta property="og:image" content={process.env.NEXT_PUBLIC_BASE_URL + "/images/logo-text.png"} />
                 <meta property="og:description" content={"Currently showing articles within category: " + categoryName} />
                 <meta property="og:url" content={process.env.NEXT_PUBLIC_BASE_URL + "/category" + categoryUrl} />
                 <link rel="canonical" href={process.env.NEXT_PUBLIC_BASE_URL + "/category" +  categoryUrl} />

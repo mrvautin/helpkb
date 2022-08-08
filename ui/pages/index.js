@@ -97,6 +97,7 @@ function Home() {
                 <meta name="description" content={settings.config.websiteDescription}></meta>
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content={settings.config.websiteName} />
+                <meta property="og:image" content={process.env.NEXT_PUBLIC_BASE_URL + "/images/logo-text.png"} />
                 <meta property="og:description" content={settings.config.websiteDescription} />
                 <meta property="og:url" content={process.env.NEXT_PUBLIC_BASE_URL} />
                 <link rel="canonical" href={process.env.NEXT_PUBLIC_BASE_URL} />
