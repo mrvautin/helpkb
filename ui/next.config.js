@@ -1,5 +1,8 @@
 module.exports = {
     distDir: process.env.BUILD_DIR,
+    generateBuildId: async () => {
+        return 'buildId'
+    },
     webpack: (config, { dev, isServer }) => {
         if (!dev && !isServer) {
             Object.assign(config.resolve.alias, {
@@ -8,7 +11,7 @@ module.exports = {
                 'react-dom': 'preact/compat',
             })
         }
-        return config
+        return config;
     },
     async rewrites() {
         return [
