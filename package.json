@@ -2,6 +2,7 @@
   "name": "helpkb",
   "version": "0.0.1",
   "description": "A superfast and easy to use knowledge base to help your customers get the info they need, when they need it most.",
+  "private": true,
   "keywords": [
     "helpkb",
     "kb",
@@ -23,31 +24,65 @@
     "email": "hi@markmoffat.com",
     "url": "https://docs.helpkb.org/"
   },
-  "engines": {
-    "node": ">=14"
-  },
-  "private": true,
   "scripts": {
-    "dev:api": "cd api && NODE_ENV=development node app.js",
-    "dev:ui": "cd ui && npx next dev",
-    "start:api": "cd api && NODE_ENV=production node app.js",
-    "start:ui": "cd ui && NODE_ENV=production npx next start",
-    "start": "npm run install && npm run build && npm run start:api & npm run start:ui",
-    "dev": "npm run dev:api & npm run dev:ui",
-    "prod": "npm run build && npm run start",
-    "install:ui": "cd ui && npm install",
-    "install:api": "cd api && npm install",
-    "install": "npm run install:ui && npm run install:api",
-    "build": "cd ui && npx next build",
+    "dev": "npx next dev",
+    "start": "npx next start",
+    "prod": "npm run start",
+    "build": "npx next build",
     "deploy": "pm2 deploy production",
-    "lint": "cd ui && npx next lint",
-    "test": "cd api && npm run test",
-    "setup": "cd api && node setup.js"
+    "lint": "npx next lint",
+    "test": "npm run test",
+    "setup": "node setup.js"
   },
   "dependencies": {
-    "next": "^12.1.6"
+    "array-move": "^4.0.0",
+    "axios": "^0.26.0",
+    "date-fns": "^2.28.0",
+    "dedent": "^0.7.0",
+    "formidable": "^2.1.1",
+    "gray-matter": "^4.0.3",
+    "next": "latest",
+    "next-auth": "^4.22.0",
+    "nextjs-progressbar": "^0.0.14",
+    "pg": "^8.10.0",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.4.0",
+    "react-confirm-alert": "^2.8.0",
+    "react-dom": "latest",
+    "react-easy-sort": "^1.5.0",
+    "react-ga4": "^1.4.1",
+    "react-hot-toast": "^2.2.0",
+    "react-markdown": "^8.0.3",
+    "react-resize-detector": "^7.1.1",
+    "react-social-login": "^3.4.15",
+    "react-spinners": "^0.12.0",
+    "react-syntax-highlighter": "^15.5.0",
+    "sequelize": "^6.31.0",
+    "sharp": "^0.30.6",
+    "string-strip-html": "^9.1.12"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "eslint": "^8.18.0"
+    "@types/node": "^18.15.11",
+    "@types/react": "^18.0.35",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "eslint": "^8.10.0",
+    "eslint-config-next": "12.1.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-validate-jsx-nesting": "^0.1.0",
+    "prettier": "^2.8.7",
+    "typescript": "^5.0.4"
   }
 }

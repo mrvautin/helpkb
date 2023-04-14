@@ -23,8 +23,7 @@ services:
       - DB_PASSWORD=helpkb
       - UI_PORT=3000
       - BASE_URL=http://localhost
-      - BASE_API_URL=http://localhost
-      - SESSION_SECRET=random-string
+      - NEXTAUTH_SECRET=random-string
       - GITHUB_CLIENT_ID=github-client-id
       - GITHUB_SECRET=github-secret
       - NEXT_PUBLIC_GITHUB_CLIENTID=github-client-id
@@ -64,10 +63,7 @@ services:
     environment:
       - BUILD_DIR=./.next
       - UI_PORT=3000
-      - API_PORT=4000
       - NODE_ENV=development
       - HOSTNAME=http://localhost
       - BASE_URL=http://localhost
-      - BASE_API_URL=http://localhost
       - NEXT_PUBLIC_BASE_URL=http://localhost
-      - NEXT_PUBLIC_BASE_API_URL=http://localhost

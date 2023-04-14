@@ -1,0 +1,12 @@
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/api/menu": "pages/api/menu.js",
+  "/api/settings": "pages/api/settings.js",
+  "/": "pages/index.js",
+  "/api/categories": "pages/api/categories.js",
+  "/api/search/[searchterm]": "pages/api/search/[searchterm].js",
+  "/article/[...article]": "pages/article/[...article].js",
+  "/api/article/[permalink]": "pages/api/article/[permalink].js"
+}
