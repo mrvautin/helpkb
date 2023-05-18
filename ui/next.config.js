@@ -2,7 +2,6 @@ const { readEnv } = require('../api/lib/env');
 const env = readEnv();
 
 module.exports = {
-    distDir: process.env.BUILD_DIR,
     generateBuildId: async () => {
         return 'buildId'
     },

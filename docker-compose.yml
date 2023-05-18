@@ -62,7 +62,6 @@ services:
     ports:
       - 3000:3000
     environment:
-      - BUILD_DIR=./.next
       - UI_PORT=3000
       - API_PORT=4000
       - NODE_ENV=development
