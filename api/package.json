@@ -8,40 +8,36 @@
     "test": "ava"
   },
   "dependencies": {
+    "@prisma/client": "^4.14.0",
+    "@quixo3/prisma-session-store": "^3.1.11",
     "axios": "^0.26.0",
     "better-sqlite3": "^7.5.3",
-    "connect-session-sequelize": "^7.1.4",
     "cors": "^2.8.5",
     "dedent": "^0.7.0",
     "express": "^4.17.2",
     "express-fileupload": "^1.4.0",
     "express-session": "^1.17.2",
     "gray-matter": "^4.0.3",
-    "mariadb": "^3.0.0",
-    "mysql2": "^2.3.3",
-    "pg": "^8.7.3",
-    "pg-hstore": "^2.3.4",
     "qs": "^6.10.3",
     "react": "^18.1.0",
-    "sequelize": "^6.20.1",
-    "sitemap": "^7.1.1",
-    "sqlite3": "^5.0.8",
-    "tedious": "^14.5.0",
-    "uuid": "^8.3.2"
+    "sitemap": "^7.1.1"
+  },
+  "prisma": {
+    "schema": "../prisma/schema.prisma"
   },
   "ava": {
     "serial": true,
     "files": [
       "./tests/specs/*.js"
     ],
-    "timeout": "10s",
+    "timeout": "60s",
     "verbose": true,
     "environmentVariables": {
       "NODE_ENV": "test"
     }
   },
   "devDependencies": {
-    "ava": "^4.0.1",
-    "supertest": "^6.2.2"
+    "ava": "^5.2.0",
+    "supertest": "6.2.2"
   }
 }

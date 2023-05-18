@@ -1,21 +1,11 @@
 const session = require('express-session');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const { db } = require('./lib/db');
+const prisma = require('./lib/prisma');
 const { readEnv } = require('./lib/env');
 readEnv();
 const express = require('express');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
-const sessionStore = new SequelizeStore({
-    db: db()
-});
-
-// DB models
-const UserModel = require('./models/users');
-const ArticleModel = require('./models/articles');
-const SettingModel = require('./models/settings');
-const CategoryModel = require('./models/categories');
-const MenuModel = require('./models/menus');
+const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
 
 // Setup app
 const app = express();
@@ -29,7 +19,14 @@ app.use(fileUpload({
 app.enable('trust proxy');
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    store: sessionStore,
+    store: new PrismaSessionStore(
+        prisma,
+        {
+          checkPeriod: 2 * 60 * 1000,  //ms
+          dbRecordIdIsSessionId: true,
+          dbRecordIdFunction: undefined,
+        }
+    ),
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -39,7 +36,6 @@ app.use(session({
         maxAge: 3600000,
     }
 }));
-sessionStore.sync();
 app.set('port', process.env.API_PORT || 4000);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -48,11 +44,10 @@ app.use(express.json());
 app.use(async (req, res, next) => {
     // Session checking, check for user
     if(req.session.userEmail){
-        const user = await UserModel.findOne({
+        const user = await prisma.users.findFirst({
             where: {
                 email: req.session.userEmail,
-            },
-            raw: true
+            }
         });
         if (user && user.email) {
             req.user = user;
@@ -102,7 +97,6 @@ if (process.env.NODE_ENV === 'test') {
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-    console.log('URL', req.url);
     const err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -140,39 +134,22 @@ app.use((err, req, res, next) => {
 });
 
 (async () => {
-    // Startup DB
-    try{
-        await db().authenticate();
-
-        // Setup DB models
-        let dbForce = false;
-        if(process.env.NODE_ENV === 'test'){
-            dbForce = true;
-        }
-        await UserModel.sync({ alter: true, force: dbForce });
-        await ArticleModel.sync({ alter: true, force: dbForce });
-        await SettingModel.sync({ alter: true, force: dbForce });
-        await CategoryModel.sync({ alter: true, force: dbForce });
-        await MenuModel.sync({ alter: true, force: dbForce });
-        
+    try{    
         // Check for existing settings record
-        const settingsCount = await SettingModel.count({
-            where: {
-                id: 1
-            }
-        });
+        const settingsCount = await prisma.settings.count();
         if(settingsCount === 0){
             // Add default settings record
-            await SettingModel.create({
-                id: 1,
-                websiteName: 'helpkb',
-                websiteDescription: 'Welcome to helpkb where you can get help when you need it most.',
-                welcomeMessage: 'Welcome to helpkb!',
-                searchPlaceholder: 'Search helpkb...',
-                baseUrl: 'http://localhost:3000',
-                dateFormat: 'dd/MM/yyyy',
-                showArticleDetails: true,
-                indexType: 'categories'
+            await prisma.settings.create({
+                data: {
+                    websiteName: 'helpkb',
+                    websiteDescription: 'Welcome to helpkb where you can get help when you need it most.',
+                    welcomeMessage: 'Welcome to helpkb!',
+                    searchPlaceholder: 'Search helpkb...',
+                    baseUrl: 'http://localhost:3000',
+                    dateFormat: 'dd/MM/yyyy',
+                    showArticleDetails: true,
+                    indexType: 'categories'
+                }
             });
         }
     }catch(ex){

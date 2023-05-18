@@ -1,19 +1,14 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
-const { Op } = require('sequelize');
 const { restrict } = require('../lib/auth');
+const prisma = require('../lib/prisma');
 const router = express.Router();
-
-// DB models
-const MenuModel = require('../models/menus');
 
 router.get('/api/menu', async(req, res) => {
     // Get the menu from the db
-    const menu = await MenuModel.findAll({
-        order: [
-            [ 'order', 'ASC' ]
-        ],
-        raw: true
+    const menu = await prisma.menus.findMany({
+        orderBy: {
+            order: 'asc',
+        }
     });
 
     if(!menu){
@@ -30,9 +25,12 @@ router.put('/api/menu/sort', async(req, res) => {
     // Update the order
     for (var i = 0; i < req.body.length; i++) {
         const newOrder = i + 1;
-        await MenuModel.update({ order: newOrder }, {
+        await prisma.menus.update({
             where: {
                 id: req.body[i].id
+            },
+            data: {
+                order: newOrder 
             }
         });
     }
@@ -43,12 +41,10 @@ router.put('/api/menu/sort', async(req, res) => {
 
 router.put('/api/menu/insert', restrict, async (req, res) => {
     // Check for existing menu
-    const duplicateMenuCheck = await MenuModel.count({
+    const duplicateMenuCheck = await prisma.menus.count({
         where: {
-            [Op.or]: {
-                name: req.body.name,
-                url: req.body.url
-            }
+            name: req.body.name,
+            url: req.body.url
         }
     });
 
@@ -59,27 +55,25 @@ router.put('/api/menu/insert', restrict, async (req, res) => {
     }
 
     // Get existing
-    const menu = await MenuModel.findAll({
-        order: [
-            [ 'order', 'ASC' ]
-        ],
-        raw: true
+    const menu = await prisma.menus.findMany({
+        orderBy: {
+            order: 'asc'
+        }
     });
 
     const order = menu.length + 1;
 
     // Insert into DB
-    const id = uuidv4();
     try{
-        await MenuModel.create({
-            id: id,
-            name: req.body.name,
-            url: req.body.url,
-            order: order
+        await prisma.menus.create({
+            data: {
+                name: req.body.name,
+                url: req.body.url,
+                order: order
+            }
         });
         return res.json('success');
     }catch(ex){
-        console.log('ex', ex);
         return res.status(400).json({
             error: 'Unable to create menu'
         });
@@ -88,44 +82,51 @@ router.put('/api/menu/insert', restrict, async (req, res) => {
 
 router.delete('/api/menu/delete/:id', restrict, async (req, res) => {
     // Check for menu
-    const menu = await MenuModel.findOne({
-        where: {
-            id: req.params.id
-        },
-        raw: true
-    });
-    if(!menu){
+    try{
+        const menu = await prisma.menus.findFirst({
+            where: {
+                id: req.params.id
+            }
+        });
+        if(!menu){
+            return res.status(400).json({
+                error: 'Menu not found'
+            });
+        }
+    }catch(ex){
         return res.status(400).json({
             error: 'Menu not found'
         });
     }
 
     // Remove the menu
-    const menuDelete = await MenuModel.destroy({
+    const menuDelete = await prisma.menus.delete({
         where: {
             id: req.params.id
         }
     });
 
     // Get the updated menu
-    const menusUpdated = await MenuModel.findAll({
-        order: [
-            [ 'order', 'DESC' ]
-        ],
-        raw: true
+    const menusUpdated = await prisma.menus.findMany({
+        orderBy: [
+            { order: 'desc' }
+        ]
     });
 
     // Update the order
     for (var i = 0; i < menusUpdated.length; i++) {
         const newOrder = i + 1;
-        await MenuModel.update({ order: newOrder }, {
+        await prisma.menus.update({
             where: {
                 id: menusUpdated[i].id
+            },
+            data: {
+                order: newOrder
             }
         });
     }
 
-    if(menuDelete > 0){
+    if(menuDelete){
         return res.json('success');
     }else{
         return res.status(400).json({

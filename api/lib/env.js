@@ -4,23 +4,25 @@ const os = require('os');
 
 const varRegex = /\$[A-Z_]*/g;
 
+let parsedEnv;
+
 const readEnv = () => {
     const devEnvFiles = [
-        path.join(__dirname, '..', '..', 'ui', '.env'),
-        path.join(__dirname, '..', '..', 'ui', '.env.development'),
-        path.join(__dirname, '..', '..', 'ui', '.env.local'),
-        path.join(__dirname, '..', '..', 'ui', '.env.development.local')
+        path.join(__dirname, '..', '..', '.env'),
+        path.join(__dirname, '..', '..', '.env.development'),
+        path.join(__dirname, '..', '..', '.env.local'),
+        path.join(__dirname, '..', '..', '.env.development.local')
     ];
     const testEnvFiles = [
-        path.join(__dirname, '..', '..', 'ui', '.env'),
-        path.join(__dirname, '..', '..', 'ui', '.env.test'),
-        path.join(__dirname, '..', '..', 'ui', '.env.test.local')
+        path.join(__dirname, '..', '..', '.env'),
+        path.join(__dirname, '..', '..', '.env.test'),
+        path.join(__dirname, '..', '..', '.env.test.local')
     ];
     const prodEnvFiles = [
-        path.join(__dirname, '..', '..', 'ui', '.env'),
-        path.join(__dirname, '..', '..', 'ui', '.env.production'),
-        path.join(__dirname, '..', '..', 'ui', '.env.local'),
-        path.join(__dirname, '..', '..', 'ui', '.env.production.local')
+        path.join(__dirname, '..', '..', '.env'),
+        path.join(__dirname, '..', '..', '.env.production'),
+        path.join(__dirname, '..', '..', '.env.local'),
+        path.join(__dirname, '..', '..', '.env.production.local')
     ];
 
     if(!process.env.NODE_ENV){
@@ -44,6 +46,8 @@ const readEnv = () => {
     if(prodEnvs.includes(nodeEnv)){
         parseEnvFiles(prodEnvFiles);
     }
+
+    return parsedEnv;
 }
 
 const parseEnvFiles = (files) => {
@@ -79,8 +83,8 @@ const parseEnv = (contents) => {
             }
         }
     };
-
     Object.assign(process.env, parsed);
+    parsedEnv = parsed;
     return parsed;
 }
 

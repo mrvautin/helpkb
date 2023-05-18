@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
-
-// DB model
-const UserModel = require('../models/users');
+const prisma = require('../lib/prisma');
 
 router.post('/mock/api/auth/github', async(req, res) => {
     // Check for user
-    const user = await UserModel.findOne({
+    const user = await prisma.users.findFirst({
         where: {
             email: req.body.email,
             enabled: true

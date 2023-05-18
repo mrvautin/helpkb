@@ -1,21 +1,16 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
 const { restrict } = require('../lib/auth');
 const { convertBool } = require('../lib/data');
-const { Op } = require('sequelize');
+const prisma = require('../lib/prisma');
 const { checkUpdatePermissions, checkDeletePermissions } = require('../lib/auth');
 const router = express.Router();
 
-// DB models
-const UserModel = require('../models/users');
-
 router.get('/api/users', restrict, async(req, res) => {
     // Run DB query
-    const users = await UserModel.findAll({
-        order: [
-            [ 'createdAt', 'DESC' ]
-        ],
-        raw: true
+    const users = await prisma.users.findMany({
+        orderBy: [
+            { created_at: 'desc' }
+        ]
     });
 
     // Return search data
@@ -24,11 +19,10 @@ router.get('/api/users', restrict, async(req, res) => {
 
 router.get('/api/user/:id', restrict, async(req, res) => {
     // Run DB query
-    const user = await UserModel.findOne({
+    const user = await prisma.users.findFirst({
         where: {
             id: req.params.id
-        },
-        raw: true
+        }
     });
 
     // Return search data
@@ -53,10 +47,10 @@ router.put('/api/user/save', restrict, async(req, res) => {
     }
 
     // Check for existing user
-    const duplicateUserCheck = await UserModel.count({
+    const duplicateUserCheck = await prisma.users.count({
         where: {
-            id: {
-                [Op.ne]: req.body.id
+            NOT: {
+                id: req.body.id
             },
             email: req.body.email
         }
@@ -76,11 +70,10 @@ router.put('/api/user/save', restrict, async(req, res) => {
     };
 
     // Get user in current state
-    const userBefore = await UserModel.findOne({
+    const userBefore = await prisma.users.findFirst({
         where: {
             id: req.body.id
-        },
-        raw: true
+        }
     });
 
     // Check if user has permission
@@ -93,23 +86,22 @@ router.put('/api/user/save', restrict, async(req, res) => {
 
     // Update DB
     try{
-        await UserModel.update({
-            name: req.body.name,
-            email: req.body.email,
-            enabled: convertBool(req.body.enabled),
-            admin: convertBool(req.body.admin)
-        }, {
+        await prisma.users.update({
+            data: {
+                name: req.body.name,
+                email: req.body.email,
+                enabled: convertBool(req.body.enabled),
+                admin: convertBool(req.body.admin)
+            },
             where: {
                 id: req.body.id
-            },
-            returning: true
+            }
         });
 
-        const userAfter = await UserModel.findOne({
+        const userAfter = await prisma.users.findFirst({
             where: {
                 id: req.body.id
-            },
-            raw: true
+            }
         });
         return res.json(userAfter);
     }catch(ex){
@@ -121,7 +113,7 @@ router.put('/api/user/save', restrict, async(req, res) => {
 
 router.put('/api/user/insert', restrict, async (req, res) => {
     // Check for existing user
-    const duplicateUserCheck = await UserModel.count({
+    const duplicateUserCheck = await prisma.users.count({
         where: {
             email: req.body.email
         }
@@ -133,15 +125,15 @@ router.put('/api/user/insert', restrict, async (req, res) => {
     }
 
     // Insert into DB
-    const id = uuidv4();
     try{
-        await UserModel.create({
-            id: id,
-            name: req.body.name,
-            email: req.body.email,
-            enabled: true,
-            admin: false,
-            owner: false
+        await prisma.users.create({
+            data: {
+                name: req.body.name,
+                email: req.body.email,
+                enabled: true,
+                admin: false,
+                owner: false
+            }
         });
         return res.json('success');
     }catch(ex){
@@ -153,11 +145,10 @@ router.put('/api/user/insert', restrict, async (req, res) => {
 
 router.delete('/api/user/delete/:id', restrict, async (req, res) => {
     // Get user in current state
-    const userBefore = await UserModel.findOne({
+    const userBefore = await prisma.users.findFirst({
         where: {
             id: req.params.id
-        },
-        raw: true
+        }
     });
 
     // Check if user has permission
@@ -169,13 +160,13 @@ router.delete('/api/user/delete/:id', restrict, async (req, res) => {
     }
 
     // Run DB query
-    const user = await UserModel.destroy({
+    const user = await prisma.users.delete({
         where: {
             id: req.params.id
         }
     });
 
-    if(user > 0){
+    if(Object.keys(user).length > 0){
         return res.json('success');
     }else{
         return res.status(400).json({

@@ -1,6 +1,6 @@
 {
   "name": "helpkb",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A superfast and easy to use knowledge base to help your customers get the info they need, when they need it most.",
   "keywords": [
     "helpkb",
@@ -42,12 +42,20 @@
     "deploy": "pm2 deploy production",
     "lint": "cd ui && npx next lint",
     "test": "cd api && npm run test",
-    "setup": "cd api && node setup.js"
+    "setup": "cd api && node setup.js",
+    "db:setup:test": "npx dotenv -e .env.test -- npx prisma db push",
+    "db:setup:dev": "npx dotenv -e .env.development -- npx prisma db push",
+    "db:setup:prod": "npx dotenv -e .env.production -- npx prisma db push"
+  },
+  "prisma": {
+    "schema": "./prisma/schema.prisma"
   },
   "dependencies": {
+    "@prisma/client": "^4.14.1",
     "next": "^12.1.6"
   },
   "devDependencies": {
+    "dotenv-cli": "^7.2.1",
     "eslint": "^8.18.0"
   }
 }

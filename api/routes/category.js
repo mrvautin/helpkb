@@ -1,22 +1,15 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
-const { db } = require('../lib/db');
-const { Op } = require('sequelize');
+const prisma = require('../lib/prisma');
 const { restrict } = require('../lib/auth');
 const router = express.Router();
-
-// DB models
-const ArticleModel = require('../models/articles');
-const CategoryModel= require('../models/categories');
 
 router.get('/api/category/:category', async(req, res) => {
     let categoryParam = req.params.category;
     // Get category
-    const category = await CategoryModel.findOne({
+    const category = await prisma.categories.findFirst({
         where: {
             url: categoryParam
-        },
-        raw: true
+        }
     });
 
     if(!category){
@@ -26,24 +19,19 @@ router.get('/api/category/:category', async(req, res) => {
     }
 
     // Run DB query
-    const articles = await ArticleModel.findAll({
+    const articles = await prisma.articles.findMany({
         where: {
-            [Op.and]: [
-                { published: true },
-                db().where(
-                    db().fn('lower', db().col('category')), 
-                    db().fn('lower', category.name),
-                )
-            ]
+            published: true,
+            category: {
+                equals: category.name,
+                mode: 'insensitive'
+            }
         },
-        order: [
-            [ 'pinned', 'DESC' ],
-            [ 'publishedDate', 'DESC' ]
+        orderBy: [
+            { pinned: 'desc' },
+            { publishedDate: 'desc' }
         ],
-        raw: true
     });
-
-
 
     // Return category articles
     return res.json({
@@ -54,14 +42,12 @@ router.get('/api/category/:category', async(req, res) => {
 
 router.get('/api/categories', async(req, res) => {
     // Get the categories from the db
-    const [categories] = await db().query(
-        `SELECT count(articles.id) as count, categories.name, categories.url, categories.id, categories.order
-        FROM categories
-        LEFT JOIN articles 
-        ON categories.name = articles.category 
-        GROUP BY categories.name, categories.id, categories.order, categories.url
-        ORDER BY categories.order`
-    );
+    const categories = await prisma.$queryRaw`SELECT count(articles.id)::int as count, categories.name, categories.url, categories.id, categories.order
+    FROM categories
+    LEFT JOIN articles 
+    ON categories.name = articles.category 
+    GROUP BY categories.name, categories.id, categories.order, categories.url
+    ORDER BY categories.order`
 
     if(!categories){
         return res.status(404).json({
@@ -77,9 +63,12 @@ router.put('/api/category/sort', async(req, res) => {
     // Update the order
     for (var i = 0; i < req.body.length; i++) {
         const newOrder = i + 1;
-        await CategoryModel.update({ order: newOrder }, {
+        await prisma.categories.update({
             where: {
                 id: req.body[i].id
+            },
+            data: {
+                order: newOrder
             }
         });
     }
@@ -90,12 +79,12 @@ router.put('/api/category/sort', async(req, res) => {
 
 router.put('/api/category/insert', restrict, async (req, res) => {
     // Check for existing category
-    const duplicateCategoryCheck = await CategoryModel.count({
+    const duplicateCategoryCheck = await prisma.categories.count({
         where: {
-            [Op.or]: {
-                name: req.body.name,
-                url: req.body.url
-            }
+            OR: [
+                { name: req.body.name },
+                { url: req.body.url },
+            ]
         }
     });
     if(duplicateCategoryCheck > 0){
@@ -105,28 +94,26 @@ router.put('/api/category/insert', restrict, async (req, res) => {
     }
 
     // Get existing
-    const categories = await CategoryModel.findAll({
-        order: [
-            [ 'order', 'ASC' ]
-        ],
-        raw: true
+    const categories = await prisma.categories.findMany({
+        orderBy: {
+            order: 'asc'
+        }
     });
 
     const order = categories.length + 1;
 
     // Insert into DB
-    const id = uuidv4();
     try{
-        await CategoryModel.create({
-            id: id,
-            name: req.body.name,
-            url: req.body.url,
-            enabled: true,
-            order: order
+        await prisma.categories.create({
+            data: {
+                name: req.body.name,
+                url: req.body.url,
+                enabled: true,
+                order: order
+            }
         });
         return res.json('success');
     }catch(ex){
-        console.log('ex', ex);
         return res.status(400).json({
             error: 'Unable to create category'
         });
@@ -135,46 +122,55 @@ router.put('/api/category/insert', restrict, async (req, res) => {
 
 router.delete('/api/category/delete/:id', restrict, async (req, res) => {
     // Check for category
-    const category = await CategoryModel.findOne({
-        where: {
-            id: req.params.id
-        },
-        raw: true
-    });
-    if(!category){
+    try{
+        const category = await prisma.categories.findFirst({
+            where: {
+                id: req.params.id
+            }
+        });
+        if(!category){
+            return res.status(400).json({
+                error: 'Category not found'
+            });
+        }
+    }catch(ex){
         return res.status(400).json({
             error: 'Category not found'
         });
     }
 
     // Remove the category
-    const categoryDelete = await CategoryModel.destroy({
+    const categoryDelete = await prisma.categories.delete({
         where: {
             id: req.params.id
         }
     });
 
     // Get the updated categories
-    const categories = await CategoryModel.findAll({
-        order: [
-            [ 'order', 'ASC' ]
-        ],
-        raw: true
+    const categories = await prisma.categories.findMany({
+        orderBy: {
+            order: 'asc'
+        }
     });
 
     // Update the order
     for (var i = 0; i < categories.length; i++) {
         const newOrder = i + 1;
-        await CategoryModel.update({ order: newOrder }, {
+        await prisma.categories.update({
             where: {
                 id: categories[i].id
+            },
+            data: {
+                order: newOrder
             }
         });
     }
 
-    if(categoryDelete > 0){
+    // Respond
+    if(categoryDelete){
         return res.json('success');
     }else{
+        console.log('in here ex', categoryDelete);
         return res.status(400).json({
             error: 'Unable to delete category'
         });

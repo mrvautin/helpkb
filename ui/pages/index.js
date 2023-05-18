@@ -42,7 +42,7 @@ function Home() {
                                     <div  className="card">
                                         <div className="card-body m-4 text-center">
                                             <h3 className="card-title mb-4">{result.name}</h3>
-                                            <Link href={"/category/" + result.url}>
+                                            <Link legacyBehavior href={"/category/" + result.url}>
                                                 <a className="btn btn-primary">See articles <span className="badge bg-light text-dark">{result.count}</span></a>
                                             </Link>
                                         </div>

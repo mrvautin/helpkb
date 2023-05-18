@@ -27,7 +27,7 @@ function Articledata(props) {
                         <div className="row">
                             <div className="col-md-6 text-start text-lg-start">
                                 <strong>Category: </strong>
-                                <Link href={"/category/" + props.article.category.toLowerCase()}>
+                                <Link legacyBehavior href={"/category/" + props.article.category.toLowerCase()}>
                                     <a>{capsFirst(props.article.category)}</a>
                                 </Link>
                             </div>

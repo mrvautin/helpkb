@@ -1,11 +1,8 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
 const qs = require('qs');
 const axios = require('axios');
+const prisma = require('../lib/prisma');
 const router = express.Router();
-
-// DB models
-const UserModel = require('../models/users');
 
 router.get('/api/session', (req, res) => {
     // Check for session
@@ -55,7 +52,7 @@ router.post('/api/auth/github', async (req, res) => {
     const githubUserData =  githubUser.data;
 
     // Check for user
-    const user = await UserModel.findOne({
+    const user = await prisma.users.findFirst({
         where: {
             email: githubUserData.email,
             enabled: true
@@ -73,7 +70,7 @@ router.post('/api/auth/github', async (req, res) => {
     }
 
     // Check if admin exists
-    const admin = await UserModel.findOne({
+    const admin = await prisma.users.findFirst({
         where: {
             admin: true
         }
@@ -86,14 +83,14 @@ router.post('/api/auth/github', async (req, res) => {
         });
     }else{
         // No admin exists, insert new admin user
-        const id = uuidv4();
-        await UserModel.create({
-            id: id,
-            email: githubUserData.email,
-            name: githubUserData.name,
-            enabled: true,
-            admin: true,
-            owner: true
+        await prisma.users.create({
+            data: {
+                email: githubUserData.email,
+                name: githubUserData.name,
+                enabled: true,
+                admin: true,
+                owner: true
+            }
         });
         req.session.userEmail = githubUserData.email;
         return res.json({

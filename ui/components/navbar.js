@@ -14,7 +14,7 @@ function Navbar(props) {
         return (
             <div>
                 <nav className="sb-topnav navbar">
-                    <Link href="/admin/dashboard">
+                    <Link legacyBehavior href="/admin/dashboard">
                         <a className="navbar-brand">
                             <Image src="/images/logo-text.png" className="align-top pt-0" width={104} height={40} alt="helpkb logo" />
                         </a>
@@ -31,7 +31,7 @@ function Navbar(props) {
         return (
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <div className="container-fluid">
-                    <Link href="/">
+                    <Link legacyBehavior href="/">
                         <a className="navbar-brand">
                             <Image src="/images/logo-text.png" className="align-top pt-0" width={104} height={40} alt="helpkb logo" />
                         </a>
@@ -45,7 +45,7 @@ function Navbar(props) {
                         <ul className="navbar-nav">
                             {settings.menu.map((result, i) => (
                                 <li key={i} className="nav-item">
-                                    <Link href={result.url}>
+                                    <Link legacyBehavior href={result.url}>
                                         <a className="nav-link" target="_blank">{result.name}</a>
                                     </Link>   
                                 </li>

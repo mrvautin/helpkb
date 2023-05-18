@@ -1,20 +1,12 @@
 const express = require('express');
 const { restrict } = require('../lib/auth');
 const { convertBool } = require('../lib/data');
+const prisma = require('../lib/prisma');
 const router = express.Router();
-
-// DB models
-const SettingModel = require('../models/settings');
-
 
 router.get('/api/settings', async (req, res) => {
     // Run DB query
-    const settings = await SettingModel.findOne({
-        where: {
-            id: 1
-        },
-        raw: true
-    });
+    const settings = await prisma.settings.findFirst();
 
     // Check for settings
     if(!settings){
@@ -33,31 +25,27 @@ router.get('/api/settings', async (req, res) => {
 });
 
 router.put('/api/settings/save', restrict, async(req, res) => {
-    // Update the db
-    await SettingModel.update({
-        websiteName: req.body.websiteName,
-        websiteDescription: req.body.websiteDescription,
-        welcomeMessage: req.body.welcomeMessage,
-        searchPlaceholder: req.body.websitsearchPlaceholdereName,
-        baseUrl: req.body.baseUrl,
-        dateFormat: req.body.dateFormat || 'dd/MM/yyyy',
-        showArticleDetails: convertBool(req.body.showArticleDetails),
-        indexType: req.body.indexType || 'recent'
-    }, {
-        where: {
-            id: 1
-        }
-    });
+    const settings = await prisma.settings.findFirst();
 
-    // Get new settings
-    const settings = await SettingModel.findOne({
+    // Update the db
+    const settingsUpdated = await prisma.settings.update({
+        data: {
+            websiteName: req.body.websiteName,
+            websiteDescription: req.body.websiteDescription,
+            welcomeMessage: req.body.welcomeMessage,
+            searchPlaceholder: req.body.websitsearchPlaceholdereName,
+            baseUrl: req.body.baseUrl,
+            dateFormat: req.body.dateFormat || 'dd/MM/yyyy',
+            showArticleDetails: convertBool(req.body.showArticleDetails),
+            indexType: req.body.indexType || 'recent'
+        },
         where: {
-            id: 1
+            id: settings.id
         }
     });
 
     // Return settings
-    return res.status(200).send(settings);
+    return res.status(200).send(settingsUpdated);
 });
 
 module.exports = router;

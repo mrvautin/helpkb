@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_CONNECTION_STRING")
+}
+
+model articles {
+  id                 String    @id(map: "articles_pkey1") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at         DateTime @default(now()) @db.Timestamptz(6)
+  url                String
+  title              String
+  content            String
+  published          Boolean
+  category           String
+  pinned             Boolean
+  publishedDate      DateTime
+  views              Int
+}
+
+model categories {
+  id                 String    @id(map: "categories_pkey1") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name               String
+  url                String
+  order              Int 
+  enabled            Boolean
+}
+
+model menus {
+  id                 String    @id(map: "menus_pkey1") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name               String
+  url                String
+  order              Int
+}
+
+model settings {
+  id                 String    @id(map: "settings_pkey1") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  websiteName        String
+  websiteDescription String
+  welcomeMessage     String
+  searchPlaceholder  String
+  dateFormat         String
+  showArticleDetails Boolean
+  baseUrl            String
+  indexType          String
+}
+
+model users {
+  id                 String    @id(map: "users_pkey1") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email              String
+  name               String
+  enabled            Boolean
+  admin              Boolean
+  owner              Boolean
+  created_at         DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model Session {
+  id                 String   @id
+  sid                String   @unique
+  data               String
+  expiresAt          DateTime
+}

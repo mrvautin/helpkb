@@ -110,7 +110,7 @@ function Menu() {
     }
     
     const onSortEnd = async(oldIndex, newIndex) => {
-        const newOrder = [];
+        let newOrder = [];
         setMenus((array) => {
             newOrder = arrayMoveImmutable(array, oldIndex, newIndex);
             return newOrder;

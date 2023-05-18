@@ -34,7 +34,7 @@ function Sidebar() {
             <nav className="sb-sidenav sb-sidenav-light">
                 <div className="sb-sidenav-menu mt-3">
                     <div className="nav">
-                        <Link href="/admin/dashboard">
+                        <Link legacyBehavior href="/admin/dashboard">
                             <a className="nav-link" onClick={toggleSidebar}>
                                 <div className="sb-nav-link-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -44,7 +44,7 @@ function Sidebar() {
                                 Dashboard    
                             </a>
                         </Link>
-                        <Link href="/admin/new">
+                        <Link legacyBehavior href="/admin/new">
                             <a className="nav-link" onClick={toggleSidebar}>
                                 <div className="sb-nav-link-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -54,7 +54,7 @@ function Sidebar() {
                                 Create article
                             </a>
                         </Link>
-                        <Link href="/admin/categories">
+                        <Link legacyBehavior href="/admin/categories">
                             <a className="nav-link" onClick={toggleSidebar}>
                                 <div className="sb-nav-link-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -64,7 +64,7 @@ function Sidebar() {
                                 Categories 
                             </a>
                         </Link>
-                        <Link href="/admin/users">
+                        <Link legacyBehavior href="/admin/users">
                             <a className="nav-link" onClick={toggleSidebar}>
                                 <div className="sb-nav-link-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -75,7 +75,7 @@ function Sidebar() {
                                 Users 
                             </a>
                         </Link>
-                        <Link href="/admin/menu">
+                        <Link legacyBehavior href="/admin/menu">
                             <a className="nav-link" onClick={toggleSidebar}>
                                 <div className="sb-nav-link-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -85,7 +85,7 @@ function Sidebar() {
                                 Menu 
                             </a>
                         </Link>
-                        <Link href="/admin/settings">
+                        <Link legacyBehavior href="/admin/settings">
                             <a className="nav-link" onClick={toggleSidebar}>
                                 <div className="sb-nav-link-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">

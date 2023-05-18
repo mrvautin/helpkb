@@ -1,15 +1,11 @@
 const express = require('express');
-const { db } = require('../lib/db');
+const prisma = require('../lib/prisma');
 const dedent = require('dedent');
 const { SitemapStream } = require('sitemap');
 const { createGzip } = require('zlib');
 const fs = require('fs');
 const path = require('path');
 const router = express.Router();
-
-// DB models
-const ArticleModel = require('../models/articles');
-const CategoryModel = require('../models/categories');
 
 router.get('/files/:imgname', (req, res) => {
     const imagePath = path.join(__dirname, '..', '..', 'ui', 'public', 'uploads', req.params.imgname);
@@ -53,7 +49,7 @@ router.get('/sitemap.xml', async(req, res) => {
         smStream.write({ url: '', changefreq: 'daily', priority: 0.7 })
 
         // Get our articles from the DB
-        const articles = await ArticleModel.findAll({
+        const articles = await prisma.articles.findMany({
             where: {
                 published: true
             }
@@ -65,11 +61,10 @@ router.get('/sitemap.xml', async(req, res) => {
         });
 
         // Get categories from the db
-        const categories = await CategoryModel.findAll({
-            order: [
-                [ 'order', 'ASC' ]
-            ],
-            raw: true
+        const categories = await prisma.categories.findMany({
+            orderBy: [
+                { order: 'asc' }
+            ]
         });
 
         // Loop categories and add the URL

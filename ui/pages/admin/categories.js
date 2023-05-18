@@ -110,7 +110,7 @@ function Categories() {
     }
     
     const onSortEnd = async(oldIndex, newIndex) => {
-        const newOrder = [];
+        let newOrder = [];
         setCategories((array) => {
             newOrder = arrayMoveImmutable(array, oldIndex, newIndex);
             return newOrder;

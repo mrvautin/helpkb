@@ -1,3 +1,6 @@
+const { readEnv } = require('../api/lib/env');
+const env = readEnv();
+
 module.exports = {
     distDir: process.env.BUILD_DIR,
     generateBuildId: async () => {
@@ -17,8 +20,9 @@ module.exports = {
         return [
             {
                 source: '/api/:path*',
-                destination: `${process.env.BASE_API_URL}/api/:path*` // Proxy to Backend
+                destination: `${env.BASE_API_URL}/api/:path*` // Proxy to Backend
             }
         ]
-    }
+    },
+    env
 }

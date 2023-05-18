@@ -1,24 +1,18 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
-const { db } = require('../lib/db');
+const prisma = require('../lib/prisma');
 const { validateMatter, convertBool } = require('../lib/data');
 const { restrict } = require('../lib/auth');
-const { Op } = require('sequelize');
 const router = express.Router();
-
-// DB models
-const ArticleModel = require('../models/articles');
 
 router.get('/api/article/:articleurl', async(req, res) => {
     // Run DB query
-    const article = await ArticleModel.findOne({
+    const article = await prisma.articles.findFirst({
         where: {
             url: req.params.articleurl,
             published: true
-        },
-        raw: true
+        }
     });
 
     // Check if article found and return 404 if not
@@ -32,9 +26,12 @@ router.get('/api/article/:articleurl', async(req, res) => {
     if(!req.user){
         let viewCount = article.views !== null ? article.views : 0;
         viewCount++;
-        await ArticleModel.update({ views: viewCount }, {
+        await prisma.articles.update({
             where: {
                 id: article.id
+            },
+            data: {
+                views: viewCount
             }
         });
     }
@@ -46,19 +43,26 @@ router.get('/api/article/:articleurl', async(req, res) => {
 router.get('/api/search/:searchparam', async(req, res) => {
     // Run DB query
     const searchParam = req.params.searchparam.toLowerCase();
-    const articles = await ArticleModel.findAll({
+
+    const articles = await prisma.articles.findMany({
         where: {
-            [Op.or]: {
-                title: db().where(db().fn('LOWER', db().col('title')), 'LIKE', `%${searchParam}%`),
-                content: db().where(db().fn('LOWER', db().col('content')), 'LIKE', `%${searchParam}%`)
-            },
+            OR: [
+                {
+                    title: {
+                        search: searchParam,
+                    },
+                },
+                {
+                    content: {
+                        search: searchParam,
+                    },
+                },
+            ],
             published: true
         },
-        order: [
-            [ 'publishedDate', 'DESC' ]
-        ],
-        limit: 10,
-        raw: true
+        orderBy: {
+            publishedDate: 'desc',
+        },
     });
 
     // Return search data
@@ -72,16 +76,15 @@ router.get('/api/search/count/:num', async(req, res) => {
     }
 
     // Run DB query
-    const articles = await ArticleModel.findAll({
+    const articles = await prisma.articles.findMany({
         where: {
             published: true
         },
-        order: [
-            [ 'pinned', 'DESC' ],
-            [ 'publishedDate', 'DESC' ]
+        take: parseInt(limit),
+        orderBy: [
+            { pinned: 'desc' },
+            { publishedDate: 'desc' }
         ],
-        limit: limit,
-        raw: true
     });
 
     // Return search data
@@ -90,12 +93,12 @@ router.get('/api/search/count/:num', async(req, res) => {
 
 router.get('/api/admin/search/count/:num', restrict, async(req, res) => {
     // Run DB query
-    const articles = await ArticleModel.findAll({
-        order: [
-            [ 'pinned', 'DESC' ],
-            [ 'publishedDate', 'DESC' ]
+    const articles = await prisma.articles.findMany({
+        orderBy: [
+            { pinned: 'desc' },
+            { publishedDate: 'desc' }
         ],
-        limit: parseInt(req.params.num)
+        take: parseInt(req.params.num)
     });
 
     // Return search data
@@ -104,7 +107,7 @@ router.get('/api/admin/search/count/:num', restrict, async(req, res) => {
 
 router.get('/api/article/edit/:id', restrict, async(req, res) => {
     // Run DB query
-    const article = await ArticleModel.findOne({
+    const article = await prisma.articles.findFirst({
         where: {
             id: req.params.id
         }
@@ -150,7 +153,7 @@ router.put('/api/article/insert', restrict, async(req, res) => {
     }
 
     // Check for existing
-    const duplicateUrlCheck = await ArticleModel.count({
+    const duplicateUrlCheck = await prisma.articles.count({
         where: {
             url: data.url
         }
@@ -163,19 +166,21 @@ router.put('/api/article/insert', restrict, async(req, res) => {
 
     // Insert into DB
     try{
-        const id = uuidv4();
-        await ArticleModel.create({
-            id: id,
-            url: data.url,
-            title: data.title,
-            content: data.content,
-            published: convertBool(data.published),
-            category: data.category,
-            publishedDate: data.publishedDate,
-            views: data.views
+        const article = await prisma.articles.create({
+            data: {
+                url: data.url,
+                title: data.title,
+                content: data.content,
+                published: convertBool(data.published),
+                category: data.category,
+                publishedDate: data.publishedDate,
+                views: data.views,
+                pinned: false
+            }
         });
+
         return res.json({
-            articleId: id
+            articleId: article.id
         });
     }catch(ex){
         return res.status(400).json({
@@ -211,10 +216,10 @@ router.put('/api/article/save', restrict, async (req, res) => {
     }
 
     // Check for existing
-    const duplicateUrlCheck = await ArticleModel.count({
+    const duplicateUrlCheck = await prisma.articles.count({
         where: {
-            id: {
-                [Op.ne]: req.body.id
+            NOT: {
+                id: req.body.id
             },
             url: data.url
         }
@@ -227,22 +232,23 @@ router.put('/api/article/save', restrict, async (req, res) => {
 
     // Update DB
     try{
-        await ArticleModel.update({
-            title: data.title,
-            content: req.body.content,
-            url: data.url,
-            published: convertBool(data.published),
-            category: data.category,
-            pinned: data.pinned,
-            publishedDate: data.publishedDate
-        }, {
+        await prisma.articles.update({
+            data: {
+                title: data.title,
+                content: req.body.content,
+                url: data.url,
+                published: convertBool(data.published),
+                category: data.category,
+                pinned: data.pinned,
+                publishedDate: data.publishedDate
+            },
             where: {
                 id: req.body.id
             }
         });
 
         // Get updated article
-        const updatedArticle = await ArticleModel.findOne({
+        const updatedArticle = await prisma.articles.findFirst({
             where: {
                 id: req.body.id
             }
@@ -264,13 +270,19 @@ router.delete('/api/article/delete/:id', restrict, async (req, res) => {
     }
 
     // Check for article
-    const article = await ArticleModel.findOne({
-        where: {
-            id: req.params.id
-        },
-        raw: true
-    });
-    if(!article){
+    try{
+        const article = await prisma.articles.findFirst({
+            where: {
+                id: req.params.id
+            }
+        });
+        
+        if(!article){
+            return res.status(400).json({
+                error: 'Article not found'
+            });
+        }
+    }catch(ex){
         return res.status(400).json({
             error: 'Article not found'
         });
@@ -278,7 +290,7 @@ router.delete('/api/article/delete/:id', restrict, async (req, res) => {
 
     // Run DB query
     try{
-        await ArticleModel.destroy({
+        await prisma.articles.delete({
             where: {
                 id: req.params.id
             }

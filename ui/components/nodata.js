@@ -31,7 +31,7 @@ function Nodata(props) {
                         <div className="wrapper text-center mt-5">
                             <h2>No {props.type}</h2>
                             <h4 className="text-muted">
-                                <Link href="/login">Login</Link> and create some {props.type}
+                                <Link legacyBehavior href="/login">Login</Link> and create some {props.type}
                             </h4>
                         </div>
                     </div>
