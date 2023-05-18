@@ -5,14 +5,11 @@ module.exports = {
     generateBuildId: async () => {
         return 'buildId'
     },
-    webpack: (config, { dev, isServer }) => {
-        if (!dev && !isServer) {
-            Object.assign(config.resolve.alias, {
-                react: 'preact/compat',
-                'react-dom/test-utils': 'preact/test-utils',
-                'react-dom': 'preact/compat',
-            })
-        }
+    webpack: (
+        config,
+        { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack },
+      ) => {
+        // Important: return the modified config
         return config;
     },
     async rewrites() {
