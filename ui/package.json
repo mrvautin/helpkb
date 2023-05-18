@@ -9,7 +9,7 @@
     "date-fns": "^2.28.0",
     "dedent": "^0.7.0",
     "gray-matter": "^4.0.3",
-    "next": "latest",
+    "next": "3.4.2",
     "nextjs-progressbar": "^0.0.14",
     "react": "^18.2.0",
     "react-bootstrap": "^2.4.0",

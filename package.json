@@ -29,16 +29,16 @@
     "dev:ui": "cd ui && npx next dev",
     "start:api": "cd api && NODE_ENV=production node app.js",
     "start:ui": "cd ui && NODE_ENV=production npx next start",
-    "start": "yarn run install && yarn run build && yarn run start:api & yarn run start:ui",
-    "dev": "yarn run dev:api & yarn run dev:ui",
-    "prod": "yarn run build && yarn run start",
+    "start": "yarn install && yarn build && yarn start:api & yarn start:ui",
+    "dev": "yarn dev:api & yarn dev:ui",
+    "prod": "yarn build && yarn start",
     "install:ui": "cd ui && yarn install",
     "install:api": "cd api && yarn install",
-    "install": "yarn run install:ui && yarn run install:api",
+    "install": "yarn install:ui && yarn install:api",
     "build": "cd ui && npx next build",
     "deploy": "pm2 deploy production",
     "lint": "cd ui && npx next lint",
-    "test": "cd api && yarn run test",
+    "test": "cd api && yarn test",
     "setup": "cd api && node setup.js",
     "db:setup:test": "npx dotenv -e .env.test -- npx prisma db push",
     "db:setup:dev": "npx dotenv -e .env.development -- npx prisma db push",
@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.14.1",
-    "next": "latest"
+    "next": "13.4.2"
   },
   "devDependencies": {
     "dotenv-cli": "^7.2.1",
