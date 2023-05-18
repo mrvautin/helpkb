@@ -23,25 +23,22 @@
     "email": "hi@markmoffat.com",
     "url": "https://docs.helpkb.org/"
   },
-  "engines": {
-    "node": ">=18"
-  },
   "private": true,
   "scripts": {
     "dev:api": "cd api && NODE_ENV=development node app.js",
     "dev:ui": "cd ui && npx next dev",
     "start:api": "cd api && NODE_ENV=production node app.js",
     "start:ui": "cd ui && NODE_ENV=production npx next start",
-    "start": "npm run install && npm run build && npm run start:api & npm run start:ui",
-    "dev": "npm run dev:api & npm run dev:ui",
-    "prod": "npm run build && npm run start",
-    "install:ui": "cd ui && npm install",
-    "install:api": "cd api && npm install",
-    "install": "npm run install:ui && npm run install:api",
+    "start": "yarn run install && yarn run build && yarn run start:api & yarn run start:ui",
+    "dev": "yarn run dev:api & yarn run dev:ui",
+    "prod": "yarn run build && yarn run start",
+    "install:ui": "cd ui && yarn install",
+    "install:api": "cd api && yarn install",
+    "install": "yarn run install:ui && yarn run install:api",
     "build": "cd ui && npx next build",
     "deploy": "pm2 deploy production",
     "lint": "cd ui && npx next lint",
-    "test": "cd api && npm run test",
+    "test": "cd api && yarn run test",
     "setup": "cd api && node setup.js",
     "db:setup:test": "npx dotenv -e .env.test -- npx prisma db push",
     "db:setup:dev": "npx dotenv -e .env.development -- npx prisma db push",
@@ -52,7 +49,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.14.1",
-    "next": "^12.1.6"
+    "next": "latest"
   },
   "devDependencies": {
     "dotenv-cli": "^7.2.1",
