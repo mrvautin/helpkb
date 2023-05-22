@@ -30,7 +30,7 @@
     "build": "npx next build",
     "deploy": "pm2 deploy production",
     "lint": "npx next lint",
-    "test": "jest --verbose ./__tests__/specs --runInBand",
+    "test": "npx dotenv -e .env.test -- jest --verbose ./__tests__/specs --runInBand",
     "setup": "node setup.js",
     "db:setup:test": "npx dotenv -e .env.test -- npx prisma db push",
     "db:setup:dev": "npx dotenv -e .env.development -- npx prisma db push",
