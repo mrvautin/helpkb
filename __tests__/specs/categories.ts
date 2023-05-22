@@ -12,7 +12,8 @@ beforeEach(async () => {
 });
 
 it('Get categories', async () => {
-    const handler: typeof getCategories & { config?: PageConfig } = getCategories;
+    const handler: typeof getCategories & { config?: PageConfig } =
+        getCategories;
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
@@ -28,7 +29,7 @@ it('Get single category', async () => {
     const handler: typeof getCategory & { config?: PageConfig } = getCategory;
     await testApiHandler({
         handler,
-        paramsPatcher: (params) => (params.category = testData.categories[0].url),
+        paramsPatcher: params => (params.category = testData.categories[0].url),
         test: async ({ fetch }) => {
             const res = await fetch({ method: 'GET' });
             const data = await res.json();
@@ -39,10 +40,11 @@ it('Get single category', async () => {
 });
 
 it('Delete Category', async () => {
-    const handler: typeof deleteCategory & { config?: PageConfig } = deleteCategory;
+    const handler: typeof deleteCategory & { config?: PageConfig } =
+        deleteCategory;
     await testApiHandler({
         handler,
-        paramsPatcher: (params) => (params.id = testData.categories[0].id),
+        paramsPatcher: params => (params.id = testData.categories[0].id),
         test: async ({ fetch }) => {
             const res = await fetch({ method: 'DELETE' });
             const data = await res.json();
@@ -53,10 +55,12 @@ it('Delete Category', async () => {
 });
 
 it('Delete non-existent Category', async () => {
-    const handler: typeof deleteCategory & { config?: PageConfig } = deleteCategory;
+    const handler: typeof deleteCategory & { config?: PageConfig } =
+        deleteCategory;
     await testApiHandler({
         handler,
-        paramsPatcher: (params) => (params.id = '22836c92-a665-48f7-93c1-15600d719e04'),
+        paramsPatcher: params =>
+            (params.id = '22836c92-a665-48f7-93c1-15600d719e04'),
         test: async ({ fetch }) => {
             const res = await fetch({ method: 'DELETE' });
             const data = await res.json();
@@ -67,18 +71,22 @@ it('Delete non-existent Category', async () => {
 });
 
 it('Insert Category', async () => {
-    const handler: typeof insertCategory & { config?: PageConfig } = insertCategory;
+    const handler: typeof insertCategory & { config?: PageConfig } =
+        insertCategory;
 
     const newCategory = {
         name: 'New category name',
         url: 'new-category-name',
-        enabled: true
+        enabled: true,
     };
 
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newCategory) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newCategory),
+            });
             const data = await res.json();
             expect(res.status).toEqual(200);
             expect(data).toEqual('success');
@@ -87,41 +95,53 @@ it('Insert Category', async () => {
 });
 
 it('Insert Duplicate Category Name', async () => {
-    const handler: typeof insertCategory & { config?: PageConfig } = insertCategory;
+    const handler: typeof insertCategory & { config?: PageConfig } =
+        insertCategory;
 
     const newCategory = {
         name: 'General',
         url: 'some-new-url',
-        enabled: true
+        enabled: true,
     };
 
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newCategory) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newCategory),
+            });
             const data = await res.json();
             expect(res.status).toEqual(400);
-            expect(data.error).toEqual('Another category with that name or Url exists. Please pick a different name or Url.');
+            expect(data.error).toEqual(
+                'Another category with that name or Url exists. Please pick a different name or Url.',
+            );
         },
     });
 });
 
 it('Insert Duplicate Category Url', async () => {
-    const handler: typeof insertCategory & { config?: PageConfig } = insertCategory;
+    const handler: typeof insertCategory & { config?: PageConfig } =
+        insertCategory;
 
     const newCategory = {
         name: 'Some new name',
         url: 'general',
-        enabled: true
+        enabled: true,
     };
 
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newCategory) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newCategory),
+            });
             const data = await res.json();
             expect(res.status).toEqual(400);
-            expect(data.error).toEqual('Another category with that name or Url exists. Please pick a different name or Url.');
+            expect(data.error).toEqual(
+                'Another category with that name or Url exists. Please pick a different name or Url.',
+            );
         },
     });
 });

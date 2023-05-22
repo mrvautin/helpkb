@@ -5,7 +5,7 @@ import deleteArticle from '../../pages/api/article/delete/[id]';
 import insertArticle from '../../pages/api/article/insert/index';
 import updateArticle from '../../pages/api/article/save/index';
 import type { PageConfig } from 'next';
-import { setupData, generateContentString } from '../data';
+import { generateContentString, setupData } from '../data';
 
 let testData;
 beforeEach(async () => {
@@ -16,7 +16,7 @@ it('Get article', async () => {
     const handler: typeof getArticle & { config?: PageConfig } = getArticle;
     await testApiHandler({
         handler,
-        paramsPatcher: (params) => (params.article = testData.articles[0].url),
+        paramsPatcher: params => (params.article = testData.articles[0].url),
         test: async ({ fetch }) => {
             const res = await fetch({ method: 'GET' });
             const data = await res.json();
@@ -27,10 +27,11 @@ it('Get article', async () => {
 });
 
 it('Get article Edit', async () => {
-    const handler: typeof getArticleEdit & { config?: PageConfig } = getArticleEdit;
+    const handler: typeof getArticleEdit & { config?: PageConfig } =
+        getArticleEdit;
     await testApiHandler({
         handler,
-        paramsPatcher: (params) => (params.id = testData.articles[0].id),
+        paramsPatcher: params => (params.id = testData.articles[0].id),
         test: async ({ fetch }) => {
             const res = await fetch({ method: 'GET' });
             const data = await res.json();
@@ -41,10 +42,11 @@ it('Get article Edit', async () => {
 });
 
 it('Delete article', async () => {
-    const handler: typeof deleteArticle & { config?: PageConfig } = deleteArticle;
+    const handler: typeof deleteArticle & { config?: PageConfig } =
+        deleteArticle;
     await testApiHandler({
         handler,
-        paramsPatcher: (params) => (params.id = testData.articles[0].id),
+        paramsPatcher: params => (params.id = testData.articles[0].id),
         test: async ({ fetch }) => {
             const res = await fetch({ method: 'DELETE' });
             const data = await res.json();
@@ -55,10 +57,12 @@ it('Delete article', async () => {
 });
 
 it('Delete non-existent article', async () => {
-    const handler: typeof deleteArticle & { config?: PageConfig } = deleteArticle;
+    const handler: typeof deleteArticle & { config?: PageConfig } =
+        deleteArticle;
     await testApiHandler({
         handler,
-        paramsPatcher: (params) => (params.id = '22836c92-a665-48f7-93c1-15600d719e04'),
+        paramsPatcher: params =>
+            (params.id = '22836c92-a665-48f7-93c1-15600d719e04'),
         test: async ({ fetch }) => {
             const res = await fetch({ method: 'DELETE' });
             const data = await res.json();
@@ -69,23 +73,27 @@ it('Delete non-existent article', async () => {
 });
 
 it('Insert Article', async () => {
-    const handler: typeof insertArticle & { config?: PageConfig } = insertArticle;
+    const handler: typeof insertArticle & { config?: PageConfig } =
+        insertArticle;
 
-    let newArticle = {
+    const newArticle = {
         url: 'a-new-article-url',
         title: 'A new article title',
         description: 'Hello world SEO description',
         content: 'Hello world SEO description',
         published: true,
         category: 'General',
-        pinned: false
+        pinned: false,
     };
     newArticle.content = generateContentString(newArticle);
 
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newArticle) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newArticle),
+            });
             const data = await res.json();
             expect(res.status).toEqual(200);
             expect(data).toHaveProperty('articleId');
@@ -94,45 +102,55 @@ it('Insert Article', async () => {
 });
 
 it('Insert Article duplicate URL', async () => {
-    const handler: typeof insertArticle & { config?: PageConfig } = insertArticle;
+    const handler: typeof insertArticle & { config?: PageConfig } =
+        insertArticle;
 
-    let newArticle = {
+    const newArticle = {
         url: 'test-article',
         title: 'Test Article',
         description: 'Hello world SEO description',
         content: 'Hello world SEO description',
         published: true,
         category: 'General',
-        pinned: false
+        pinned: false,
     };
     newArticle.content = generateContentString(newArticle);
 
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newArticle) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newArticle),
+            });
             const data = await res.json();
             expect(res.status).toEqual(400);
-            expect(data.error).toEqual('Another article with that URL exists. Please pick another URL.');
+            expect(data.error).toEqual(
+                'Another article with that URL exists. Please pick another URL.',
+            );
         },
     });
 });
 
 it('Insert Article missing content', async () => {
-    const handler: typeof insertArticle & { config?: PageConfig } = insertArticle;
+    const handler: typeof insertArticle & { config?: PageConfig } =
+        insertArticle;
 
-    let newArticle = {
+    const newArticle = {
         url: 'a-new-article-url',
         title: 'A new article title',
         description: 'Hello world SEO description',
         published: true,
-        pinned: false
+        pinned: false,
     };
 
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newArticle) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newArticle),
+            });
             const data = await res.json();
             expect(res.status).toEqual(400);
             expect(data.error).toEqual('Missing or invalid content supplied.');
@@ -141,32 +159,39 @@ it('Insert Article missing content', async () => {
 });
 
 it('Insert Article Invalid content', async () => {
-    const handler: typeof insertArticle & { config?: PageConfig } = insertArticle;
+    const handler: typeof insertArticle & { config?: PageConfig } =
+        insertArticle;
 
-    let newArticle = {
+    const newArticle = {
         url: 'a-new-article-url',
         title: 'A new article title',
         description: 'Hello world SEO description',
         content: 'This is invalid content matter',
         published: true,
-        pinned: false
+        pinned: false,
     };
 
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newArticle) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newArticle),
+            });
             const data = await res.json();
             expect(res.status).toEqual(400);
-            expect(data.error).toEqual('Parameter "title" missing from matter. Check "title" is set correctly');
+            expect(data.error).toEqual(
+                'Parameter "title" missing from matter. Check "title" is set correctly',
+            );
         },
     });
 });
 
 it('Update Article', async () => {
-    const handler: typeof updateArticle & { config?: PageConfig } = updateArticle;
+    const handler: typeof updateArticle & { config?: PageConfig } =
+        updateArticle;
 
-    let newArticleValues = {
+    const newArticleValues = {
         id: testData.articles[0].id,
         url: 'a-new-url-value',
         title: 'A new title',
@@ -174,14 +199,17 @@ it('Update Article', async () => {
         content: '',
         published: true,
         category: 'General',
-        pinned: false
+        pinned: false,
     };
     newArticleValues.content = generateContentString(newArticleValues);
 
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newArticleValues) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newArticleValues),
+            });
             const data = await res.json();
             expect(res.status).toEqual(200);
             expect(data.id).toEqual(newArticleValues.id);
@@ -192,20 +220,24 @@ it('Update Article', async () => {
 });
 
 it('Update Article missing content', async () => {
-    const handler: typeof updateArticle & { config?: PageConfig } = updateArticle;
+    const handler: typeof updateArticle & { config?: PageConfig } =
+        updateArticle;
 
-    let newArticle = {
+    const newArticle = {
         url: 'a-new-article-url',
         title: 'A new article title',
         description: 'Hello world SEO description',
         published: true,
-        pinned: false
+        pinned: false,
     };
 
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newArticle) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newArticle),
+            });
             const data = await res.json();
             expect(res.status).toEqual(400);
             expect(data.error).toEqual('Missing or invalid content supplied.');
@@ -214,24 +246,30 @@ it('Update Article missing content', async () => {
 });
 
 it('Update Article Invalid content', async () => {
-    const handler: typeof updateArticle & { config?: PageConfig } = updateArticle;
+    const handler: typeof updateArticle & { config?: PageConfig } =
+        updateArticle;
 
-    let newArticle = {
+    const newArticle = {
         url: 'a-new-article-url',
         title: 'A new article title',
         description: 'Hello world SEO description',
         content: 'This is invalid content matter',
         published: true,
-        pinned: false
+        pinned: false,
     };
 
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newArticle) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newArticle),
+            });
             const data = await res.json();
             expect(res.status).toEqual(400);
-            expect(data.error).toEqual('Parameter "title" missing from matter. Check "title" is set correctly');
+            expect(data.error).toEqual(
+                'Parameter "title" missing from matter. Check "title" is set correctly',
+            );
         },
     });
 });

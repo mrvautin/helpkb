@@ -1,6 +1,6 @@
 module.exports = {
     generateBuildId: async () => {
-        return 'buildId'
+        return 'buildId';
     },
     webpack: (
         config,
@@ -25,5 +25,5 @@ module.exports = {
     },
     experimental: {
         forceSwcTransforms: true,
-    }
-}
+    },
+};

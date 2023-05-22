@@ -28,7 +28,7 @@ it('Delete Menu', async () => {
     const handler: typeof deleteMenu & { config?: PageConfig } = deleteMenu;
     await testApiHandler({
         handler,
-        paramsPatcher: (params) => (params.id = testData.menu[0].id),
+        paramsPatcher: params => (params.id = testData.menu[0].id),
         test: async ({ fetch }) => {
             const res = await fetch({ method: 'DELETE' });
             const data = await res.json();
@@ -42,7 +42,8 @@ it('Delete non-existent Menu', async () => {
     const handler: typeof deleteMenu & { config?: PageConfig } = deleteMenu;
     await testApiHandler({
         handler,
-        paramsPatcher: (params) => (params.id = '22836c92-a665-48f7-93c1-15600d719e04'),
+        paramsPatcher: params =>
+            (params.id = '22836c92-a665-48f7-93c1-15600d719e04'),
         test: async ({ fetch }) => {
             const res = await fetch({ method: 'DELETE' });
             const data = await res.json();
@@ -62,7 +63,10 @@ it('Insert Menu', async () => {
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newMenu) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newMenu),
+            });
             const data = await res.json();
             expect(res.status).toEqual(200);
             expect(data).toEqual('success');
@@ -80,10 +84,15 @@ it('Insert Duplicate Menu Name', async () => {
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newMenu) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newMenu),
+            });
             const data = await res.json();
             expect(res.status).toEqual(400);
-            expect(data.error).toEqual('Another menu with that name or Url exists. Please pick a different name or Url.');
+            expect(data.error).toEqual(
+                'Another menu with that name or Url exists. Please pick a different name or Url.',
+            );
         },
     });
 });
@@ -98,10 +107,15 @@ it('Insert Duplicate Menu Url', async () => {
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newMenu) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newMenu),
+            });
             const data = await res.json();
             expect(res.status).toEqual(400);
-            expect(data.error).toEqual('Another menu with that name or Url exists. Please pick a different name or Url.');
+            expect(data.error).toEqual(
+                'Another menu with that name or Url exists. Please pick a different name or Url.',
+            );
         },
     });
 });

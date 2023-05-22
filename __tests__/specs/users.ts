@@ -32,7 +32,7 @@ it('Delete User', async () => {
     const handler: typeof deleteUser & { config?: PageConfig } = deleteUser;
     await testApiHandler({
         handler,
-        paramsPatcher: (params) => (params.id = testData.users[0].id),
+        paramsPatcher: params => (params.id = testData.users[0].id),
         test: async ({ fetch }) => {
             const res = await fetch({ method: 'DELETE' });
             const data = await res.json();
@@ -46,7 +46,8 @@ it('Delete non-existent User', async () => {
     const handler: typeof deleteUser & { config?: PageConfig } = deleteUser;
     await testApiHandler({
         handler,
-        paramsPatcher: (params) => (params.id = '22836c92-a665-48f7-93c1-15600d719e04'),
+        paramsPatcher: params =>
+            (params.id = '22836c92-a665-48f7-93c1-15600d719e04'),
         test: async ({ fetch }) => {
             const res = await fetch({ method: 'DELETE' });
             const data = await res.json();
@@ -60,17 +61,20 @@ it('Insert User', async () => {
     const handler: typeof insertUser & { config?: PageConfig } = insertUser;
 
     const newUser = {
-        email: "timmy.jones@outlook.com",
-        name: "Timmy Jones",
+        email: 'timmy.jones@outlook.com',
+        name: 'Timmy Jones',
         enabled: true,
         admin: false,
-        owner: false
+        owner: false,
     };
 
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newUser) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newUser),
+            });
             const data = await res.json();
             expect(res.status).toEqual(200);
             expect(data).toEqual('success');
@@ -82,19 +86,24 @@ it('Insert Duplicate user', async () => {
     const handler: typeof insertUser & { config?: PageConfig } = insertUser;
 
     const newUser = {
-        email: "owner@test.com",
-        name: "Jim Smith",
+        email: 'owner@test.com',
+        name: 'Jim Smith',
         enabled: true,
         admin: false,
-        owner: false
-    }
+        owner: false,
+    };
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newUser) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newUser),
+            });
             const data = await res.json();
             expect(res.status).toEqual(400);
-            expect(data.error).toEqual('Another user with that email exists. Please pick a different email address.');
+            expect(data.error).toEqual(
+                'Another user with that email exists. Please pick a different email address.',
+            );
         },
     });
 });
@@ -103,19 +112,24 @@ it('Update user', async () => {
     const handler: typeof insertUser & { config?: PageConfig } = insertUser;
 
     const newUser = {
-        email: "owner@test.com",
-        name: "Jim Smith",
+        email: 'owner@test.com',
+        name: 'Jim Smith',
         enabled: true,
         admin: false,
-        owner: false
-    }
+        owner: false,
+    };
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(newUser) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(newUser),
+            });
             const data = await res.json();
             expect(res.status).toEqual(400);
-            expect(data.error).toEqual('Another user with that email exists. Please pick a different email address.');
+            expect(data.error).toEqual(
+                'Another user with that email exists. Please pick a different email address.',
+            );
         },
     });
 });

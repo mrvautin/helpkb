@@ -3,7 +3,7 @@ const path = require('path');
 const prisma = require('../lib/prisma');
 const data = require('./setup/test-data.json');
 
-const generateContentString = (data) => {
+const generateContentString = data => {
     let articleContent = fs.readFileSync(
         path.join(__dirname, 'setup', 'articlecontent.md'),
         'utf-8',
@@ -12,10 +12,7 @@ const generateContentString = (data) => {
         /^title:.*$/gm,
         `title: ${data.title}`,
     );
-    articleContent = articleContent.replace(
-        /^url:.*$/gm,
-        `url: ${data.url}`,
-    );
+    articleContent = articleContent.replace(/^url:.*$/gm, `url: ${data.url}`);
     articleContent = articleContent.replace(
         /^description:.*$/gm,
         `description: ${data.description}`,
@@ -25,7 +22,7 @@ const generateContentString = (data) => {
         `category: ${data.category}`,
     );
     return articleContent;
-}
+};
 
 const setupData = async () => {
     if (process.env.NODE_ENV === 'test') {
@@ -136,5 +133,5 @@ const setupData = async () => {
 
 module.exports = {
     setupData,
-    generateContentString
+    generateContentString,
 };

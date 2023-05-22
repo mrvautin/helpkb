@@ -34,20 +34,27 @@ it('Save settings', async () => {
         baseUrl: 'http://localhost:3000',
         dateFormat: 'dd/MM/yyyy',
         showArticleDetails: true,
-        indexType: 'categories'
-    }
+        indexType: 'categories',
+    };
 
     await testApiHandler({
         handler,
         test: async ({ fetch }) => {
-            const res = await fetch({ method: 'PUT', body: JSON.stringify(updatedSettings) });
+            const res = await fetch({
+                method: 'PUT',
+                body: JSON.stringify(updatedSettings),
+            });
             const data = await res.json();
             expect(res.status).toEqual(200);
             expect(data).toHaveProperty('id');
             expect(data.websiteName).toEqual(updatedSettings.websiteName);
-            expect(data.websiteDescription).toEqual(updatedSettings.websiteDescription);
+            expect(data.websiteDescription).toEqual(
+                updatedSettings.websiteDescription,
+            );
             expect(data.welcomeMessage).toEqual(updatedSettings.welcomeMessage);
-            expect(data.searchPlaceholder).toEqual(updatedSettings.searchPlaceholder);
+            expect(data.searchPlaceholder).toEqual(
+                updatedSettings.searchPlaceholder,
+            );
         },
     });
 });
