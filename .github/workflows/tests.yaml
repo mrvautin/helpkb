@@ -21,7 +21,7 @@ jobs:
         env:
           POSTGRES_HOST: localhost
           POSTGRES_DB: helpkb-test        
-          POSTGRES_PASSWORD: helpkb
+          POSTGRES_PASSWORD: postgres
           POSTGRES_USER: postgres
         ports:
           - 5432:5432
@@ -37,10 +37,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Setup DB
-      run: db:setup:test
     - name: yarn install
       run: yarn install
+    - name: Setup DB
+      run: yarn run db:setup:test
     - name: yarn test
       run: yarn test
       env:
