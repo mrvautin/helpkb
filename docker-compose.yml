@@ -23,7 +23,6 @@ services:
       - DB_PASSWORD=helpkb
       - UI_PORT=3000
       - BASE_URL=http://localhost
-      - BASE_API_URL=http://localhost
       - SESSION_SECRET=random-string
       - GITHUB_CLIENT_ID=github-client-id
       - GITHUB_SECRET=github-secret
@@ -67,6 +66,4 @@ services:
       - NODE_ENV=development
       - HOSTNAME=http://localhost
       - BASE_URL=http://localhost
-      - BASE_API_URL=http://localhost
       - NEXT_PUBLIC_BASE_URL=http://localhost
-      - NEXT_PUBLIC_BASE_API_URL=http://localhost
