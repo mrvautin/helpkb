@@ -38,6 +38,8 @@ jobs:
       run: yarn install
     - name: Setup DB
       run: yarn run db:setup:test
+    - name: yarn build
+      run: yarn build
     - name: yarn test
       run: yarn test
       env:
