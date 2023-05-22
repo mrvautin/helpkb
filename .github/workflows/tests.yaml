@@ -37,7 +37,7 @@ jobs:
     - name: yarn install
       run: yarn install
     - name: Install UUID extension
-      run: CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+      run: PGPASSWORD=postgres psql -U postgres -tc "CREATE EXTENSION IF NOT EXISTS 'uuid-ossp';";
     - name: Setup DB
       run: yarn run db:setup:test
     - name: yarn test
