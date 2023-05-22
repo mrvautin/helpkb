@@ -2,10 +2,7 @@ module.exports = {
     generateBuildId: async () => {
         return 'buildId';
     },
-    webpack: (
-        config,
-        { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack },
-    ) => {
+    webpack: config => {
         // Important: return the modified config
         return config;
     },
