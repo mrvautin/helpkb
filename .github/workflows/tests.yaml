@@ -36,6 +36,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: yarn install
       run: yarn install
+    - name: Install UUID extension
+      run: CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'
     - name: Setup DB
       run: yarn run db:setup:test
     - name: yarn test
