@@ -1,6 +1,6 @@
 {
   "name": "helpkb",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "A superfast and easy to use knowledge base to help your customers get the info they need, when they need it most.",
   "keywords": [
     "helpkb",
@@ -23,36 +23,78 @@
     "email": "hi@markmoffat.com",
     "url": "https://docs.helpkb.org/"
   },
-  "private": true,
+  "private": false,
   "scripts": {
-    "dev:api": "cd api && NODE_ENV=development node app.js",
-    "dev:ui": "cd ui && npx next dev",
-    "start:api": "cd api && NODE_ENV=production node app.js",
-    "start:ui": "cd ui && NODE_ENV=production npx next start",
-    "start": "yarn install && yarn build && yarn start:api & yarn start:ui",
-    "dev": "yarn dev:api & yarn dev:ui",
+    "dev": "npx next dev",
     "prod": "yarn build && yarn start",
-    "install:ui": "cd ui && yarn install",
-    "install:api": "cd api && yarn install",
-    "install": "yarn install:ui && yarn install:api",
-    "build": "cd ui && npx next build",
+    "build": "npx next build",
     "deploy": "pm2 deploy production",
-    "lint": "cd ui && npx next lint",
-    "test": "cd api && yarn test",
-    "setup": "cd api && node setup.js",
+    "lint": "npx next lint",
+    "test": "jest --verbose ./__tests__/specs --runInBand",
+    "setup": "node setup.js",
     "db:setup:test": "npx dotenv -e .env.test -- npx prisma db push",
     "db:setup:dev": "npx dotenv -e .env.development -- npx prisma db push",
     "db:setup:prod": "npx dotenv -e .env.production -- npx prisma db push"
   },
-  "prisma": {
-    "schema": "./prisma/schema.prisma"
-  },
   "dependencies": {
     "@prisma/client": "^4.14.1",
-    "next": "13.4.2"
+    "array-move": "^4.0.0",
+    "axios": "^0.26.0",
+    "date-fns": "^2.28.0",
+    "dedent": "^0.7.0",
+    "gray-matter": "^4.0.3",
+    "next": "13.4.2",
+    "next-auth": "^4.22.1",
+    "nextjs-progressbar": "^0.0.14",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.4.0",
+    "react-confirm-alert": "^2.8.0",
+    "react-dom": "latest",
+    "react-easy-sort": "^1.5.0",
+    "react-ga4": "^1.4.1",
+    "react-hot-toast": "^2.2.0",
+    "react-markdown": "^8.0.3",
+    "react-resize-detector": "^7.1.1",
+    "react-social-login": "^3.4.17",
+    "react-spinners": "^0.12.0",
+    "react-syntax-highlighter": "^15.5.0",
+    "sharp": "^0.30.6",
+    "string-strip-html": "^9.1.12"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "@types/lodash": "^4.14.194",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
     "dotenv-cli": "^7.2.1",
-    "eslint": "^8.18.0"
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.7",
+    "eslint": "^8.10.0",
+    "eslint-config-next": "^13.4.2",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-testing-library": "^5.11.0",
+    "eslint-plugin-validate-jsx-nesting": "^0.1.1",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "jest-enzyme": "^7.1.2",
+    "lodash": "^4.17.21",
+    "next-test-api-route-handler": "^3.1.8",
+    "prettier": "^2.8.8",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
   }
 }

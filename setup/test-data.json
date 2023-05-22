@@ -1,0 +1,93 @@
+{
+    "settingsData": {
+            "websiteName": "helpkb",
+            "websiteDescription": "Welcome to helpkb where you can get help when you need it most.",
+            "welcomeMessage": "Welcome to helpkb!",
+            "searchPlaceholder": "Search helpkb...",
+            "baseUrl": "http://localhost:3000",
+            "dateFormat": "dd/MM/yyyy",
+            "showArticleDetails": true,
+            "indexType": "categories"
+    },
+    "usersData": [
+        {
+            "email": "owner@test.com",
+            "name": "Jim Smith",
+            "enabled": true,
+            "admin": true,
+            "owner": true
+        },
+        {
+            "email": "admin@test.com",
+            "name": "Tina Smith",
+            "enabled": true,
+            "admin": true,
+            "owner": false
+        },
+        {
+            "email": "regular@test.com",
+            "name": "Jane Smith",
+            "enabled": true,
+            "admin": false,
+            "owner": false
+        },
+        {
+            "email": "inactive@test.com",
+            "name": "Peter Smith",
+            "enabled": false,
+            "admin": true,
+            "owner": false
+        }
+    ],
+    "articlesData": [
+        {
+            "url": "test-article",
+            "title": "Test article",
+            "description": "Hello world SEO description",
+            "published": true,
+            "category": "General",
+            "pinned": false,
+            "views": 10
+        },
+        {
+            "url": "hello-world",
+            "title": "Hello world",
+            "description": "Hello world SEO description",
+            "published": true,
+            "category": "General",
+            "pinned": false,
+            "views": 20
+        },
+        {
+            "url": "unpublished-article",
+            "title": "Unpublished article",
+            "description": "Hello world SEO description",
+            "published": false,
+            "category": "Getting started",
+            "pinned": false,
+            "views": 30
+        }
+    ],
+    "categoriesData": [
+        {
+            "name": "General",
+            "url": "general",
+            "enabled": true
+        },
+        {
+            "name": "Getting started",
+            "url": "getting-started",
+            "enabled": true
+        }
+    ],
+    "menuData": [
+        {
+            "name": "Google",
+            "url": "https://google.com"
+        },
+        {
+            "name": "NBA",
+            "url": "https://nba.com"
+        }
+    ]
+}
