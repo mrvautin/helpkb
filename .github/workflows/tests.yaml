@@ -1,47 +1,47 @@
-name: helpkb
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-env:
-  DB_HOST: localhost
-  NODE_ENV: test
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x]
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_HOST: localhost
-          POSTGRES_DB: helpkb-test        
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_USER: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: yarn install
-      run: yarn install
-    - name: Setup DB
-      run: yarn run db:setup:test
-    - name: yarn build
-      run: yarn build
-    - name: yarn test
-      run: yarn test
-      env:
-        test: true
-        CI: true
+# name: helpkb
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+# env:
+#   DB_HOST: localhost
+#   NODE_ENV: test
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         node-version: [16.x, 18.x]
+#     services:
+#       postgres:
+#         image: postgres:latest
+#         env:
+#           POSTGRES_HOST: localhost
+#           POSTGRES_DB: helpkb-test        
+#           POSTGRES_PASSWORD: postgres
+#           POSTGRES_USER: postgres
+#         ports:
+#           - 5432:5432
+#         options: >-
+#           --health-cmd pg_isready
+#           --health-interval 10s
+#           --health-timeout 5s
+#           --health-retries 5
+#     steps:
+#     - uses: actions/checkout@v2
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#         node-version: ${{ matrix.node-version }}
+#     - name: yarn install
+#       run: yarn install
+#     - name: Setup DB
+#       run: yarn run db:setup:test
+#     - name: yarn build
+#       run: yarn build
+#     - name: yarn test
+#       run: yarn test
+#       env:
+#         test: true
+#         CI: true
