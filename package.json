@@ -28,13 +28,14 @@
     "dev": "npx next dev",
     "prod": "yarn build && yarn start",
     "build": "npx next build",
-    "deploy": "pm2 deploy production",
     "lint": "npx next lint",
     "test": "npx dotenv -e .env.test -- jest --verbose ./__tests__/specs --runInBand",
     "setup": "node setup.js",
+    "deploy": "npx dotenv -e .env.production -- yarn build && ",
     "db:setup:test": "npx dotenv -e .env.test -- npx prisma db push",
     "db:setup:dev": "npx dotenv -e .env.development -- npx prisma db push",
-    "db:setup:prod": "npx dotenv -e .env.production -- npx prisma db push"
+    "db:setup:prod": "npx dotenv -e .env.production -- npx prisma db push",
+    "postinstall": "npx prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^4.14.1",
