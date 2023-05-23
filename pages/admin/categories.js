@@ -250,7 +250,9 @@ function Categories() {
                 <title>helpkb - Categories</title>
                 <meta content="" name="description"></meta>
                 <link
-                    href="https://helpkb.org/admin/categories"
+                    href={
+                        process.env.NEXT_PUBLIC_BASE_URL + '/admin/categories'
+                    }
                     rel="canonical"
                 />
             </Head>

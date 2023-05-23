@@ -75,7 +75,7 @@ function Dashboard() {
                 <title>helpkb - Dashboard</title>
                 <meta content="" name="description"></meta>
                 <link
-                    href="https://helpkb.orgm/admin/dashboard"
+                    href={process.env.NEXT_PUBLIC_BASE_URL + '/admin/dashboard'}
                     rel="canonical"
                 />
             </Head>

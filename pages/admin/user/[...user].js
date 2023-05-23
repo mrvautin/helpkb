@@ -156,7 +156,10 @@ function User() {
             <Head>
                 <title>helpkb - User</title>
                 <meta content="" name="description"></meta>
-                <link href="https://helpkb.org/admin/users" rel="canonical" />
+                <link
+                    href={process.env.NEXT_PUBLIC_BASE_URL + '/admin/user'}
+                    rel="canonical"
+                />
             </Head>
             <Navbar admin={true} />
             <Toaster />

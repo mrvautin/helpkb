@@ -238,7 +238,10 @@ function Menu() {
             <Head>
                 <title>helpkb - Menus items</title>
                 <meta content="" name="description"></meta>
-                <link href="https://helpkb.org/admin/menu" rel="canonical" />
+                <link
+                    href={process.env.NEXT_PUBLIC_BASE_URL + '/admin/menu'}
+                    rel="canonical"
+                />
             </Head>
             <Navbar admin={true} />
             <Toaster />
