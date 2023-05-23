@@ -3,10 +3,14 @@ import Head from 'next/head';
 import matter from 'gray-matter';
 import dedent from 'dedent';
 import axios from 'axios';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Toaster } from 'react-hot-toast';
 import { useResizeDetector } from 'react-resize-detector';
-import { apiReq, clipboard, notification } from '../../components/lib/config';
+import { apiReq, notification } from '../../components/lib/config';
 import { checkUser } from '../../components/lib/user';
+import Spinner from '../../components/spinner';
 import Navbar from '../../components/navbar';
 import Sidebar from '../../components/sidebar';
 import Markdown from '../../components/markdown';
@@ -17,6 +21,10 @@ function New() {
     const [articleContentMarkdown, setArticleContentMarkdown] = useState('');
     const [editorHeight, setEditorHeight] = useState(100);
     const [editorHover, setEditorHover] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
+    const [uploading, setUploading] = useState(false);
+
+    const [showClipboardModal, setShowClipboardModal] = useState(false);
 
     // Detect resize of preview and adjust editor to match
     const { ref } = useResizeDetector({
@@ -81,7 +89,7 @@ function New() {
             });
             return;
         }
-
+        setUploading(true);
         [...e.dataTransfer.files].forEach(fileUpload);
     };
 
@@ -93,30 +101,63 @@ function New() {
         setEditorHover('');
     };
 
+    const handleClipboardModalClose = () => setShowClipboardModal(false);
+
+    const onCopyToClipboard = () => {
+        notification({
+            title: 'Success',
+            type: 'success',
+            message: 'Image markdown copied to clipboard',
+        });
+        setShowClipboardModal(false);
+    };
+
     const fileUpload = async file => {
         setEditorHover('');
         const formData = new FormData();
         formData.append('image', file);
-        const res = await axios.post('/api/file/upload', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-
-        // Take the response and form markdown into clipboard
-        const filedata = await res.data;
-        const mkdownUrl = `![alt text](${filedata.url})`;
-        if (clipboard(mkdownUrl)) {
-            notification({
-                title: 'Success',
-                type: 'success',
-                message: 'Image markdown copied to clipboard',
+        try {
+            const res = await axios.post('/api/admin/file/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             });
-        } else {
-            notification({
+
+            // Stop spinner
+            setUploading(false);
+
+            // Check for error
+            if (res.data.error) {
+                notification({
+                    title: 'Error',
+                    type: 'danger',
+                    message: res.data.error,
+                });
+                return;
+            }
+
+            // Take the response and form markdown into clipboard
+            const filedata = await res.data;
+            const mkdownUrl = `![alt text](${filedata.url})`;
+            setImageUrl(mkdownUrl);
+            setShowClipboardModal(true);
+        } catch (error) {
+            // Stop the spinner
+            setUploading(false);
+
+            // Show the error
+            if (error.response && error.response.data) {
+                notification({
+                    title: 'Error',
+                    type: 'danger',
+                    message: error.response.data.message,
+                });
+                return;
+            }
+            return notification({
                 title: 'Error',
                 type: 'danger',
-                message: 'Error copying markdown to clipboard',
+                message: 'Unable to upload file',
             });
         }
     };
@@ -172,6 +213,7 @@ function New() {
                 <Sidebar />
                 <div id="layoutSidenav_content">
                     <main>
+                        <Spinner loading={uploading} />
                         <div className="container-fluid px-4">
                             <div className="row">
                                 <div className="col-xl-12 mt-3 text-start">
@@ -243,6 +285,25 @@ function New() {
                             </div>
                         </div>
                     </main>
+                    <Modal
+                        onHide={handleClipboardModalClose}
+                        show={showClipboardModal}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Image uploaded</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Footer>
+                            <span>{imageUrl}</span>
+                            <CopyToClipboard
+                                onCopy={onCopyToClipboard}
+                                text={imageUrl}
+                            >
+                                <Button variant="success">
+                                    Copy to clipboard
+                                </Button>
+                            </CopyToClipboard>
+                        </Modal.Footer>
+                    </Modal>
                 </div>
             </div>
         </div>

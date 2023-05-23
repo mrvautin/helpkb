@@ -10,6 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { apiReq, notification } from '../../../components/lib/config';
 import { checkUser } from '../../../components/lib/user';
+import Spinner from '../../../components/spinner';
 import ErrorPage from '../../../components/404';
 import Navbar from '../../../components/navbar';
 import Sidebar from '../../../components/sidebar';
@@ -26,6 +27,7 @@ function Article() {
     const [editorHover, setEditorHover] = useState('');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showClipboardModal, setShowClipboardModal] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     // Detect resize of preview and adjust editor to match
     const onResize = useCallback((w, h) => {
@@ -101,6 +103,7 @@ function Article() {
             return;
         }
 
+        setUploading(true);
         [...e.dataTransfer.files].forEach(fileUpload);
     };
 
@@ -116,28 +119,50 @@ function Article() {
         setEditorHover('');
         const formData = new FormData();
         formData.append('image', file);
-        const res = await axios.post('/api/admin/file/upload', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+        try {
+            const res = await axios.post('/api/admin/file/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
 
-        // Check for error
-        if (res.data.error) {
-            notification({
+            // Stop the spinner
+            setUploading(false);
+
+            // Check for error
+            if (res.data.error) {
+                notification({
+                    title: 'Error',
+                    type: 'danger',
+                    message: res.data.error,
+                });
+                return;
+            }
+
+            // Take the response and form markdown into clipboard
+            const filedata = await res.data;
+            const mkdownUrl = `![alt text](${filedata.url})`;
+            setImageUrl(mkdownUrl);
+            setShowClipboardModal(true);
+        } catch (error) {
+            // Stop the spinner
+            setUploading(false);
+
+            // Show the error
+            if (error.response && error.response.data) {
+                notification({
+                    title: 'Error',
+                    type: 'danger',
+                    message: error.response.data.message,
+                });
+                return;
+            }
+            return notification({
                 title: 'Error',
                 type: 'danger',
-                message: res.data.error,
+                message: 'Unable to upload file',
             });
-            return;
         }
-
-        // Take the response and form markdown into clipboard
-        const filedata = await res.data;
-        const mkdownUrl = `![alt text](${filedata.url})`;
-        console.log('mkdownUrl', mkdownUrl);
-        setImageUrl(mkdownUrl);
-        setShowClipboardModal(true);
     };
 
     const deleteArticle = async () => {
@@ -229,6 +254,7 @@ function Article() {
                 <Sidebar />
                 <div id="layoutSidenav_content">
                     <main>
+                        <Spinner loading={uploading} />
                         <div className="container-fluid px-4">
                             <div className="row">
                                 <div className="col-xl-12 mt-3 text-start">
