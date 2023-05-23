@@ -41,6 +41,11 @@ export const authOptions = {
             }
             return session;
         },
+        redirect: async () => {
+            return Promise.resolve(
+                `${process.env.NEXTAUTH_URL}/admin/dashboard`,
+            );
+        },
         async signIn({ user }) {
             const userAccount = await prisma.users.findFirst({
                 where: {
