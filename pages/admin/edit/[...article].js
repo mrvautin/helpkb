@@ -5,13 +5,10 @@ import matter from 'gray-matter';
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 import { useResizeDetector } from 'react-resize-detector';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import {
-    apiReq,
-    clipboard,
-    notification,
-} from '../../../components/lib/config';
+import { apiReq, notification } from '../../../components/lib/config';
 import { checkUser } from '../../../components/lib/user';
 import ErrorPage from '../../../components/404';
 import Navbar from '../../../components/navbar';
@@ -24,9 +21,11 @@ function Article() {
     const [article, setArticle] = useState({});
     const [articleContentRaw, setArticleContentRaw] = useState('');
     const [articleContentMarkdown, setArticleContentMarkdown] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
     const [editorHeight, setEditorHeight] = useState(0);
     const [editorHover, setEditorHover] = useState('');
-    const [showmodal, setShowmodal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showClipboardModal, setShowClipboardModal] = useState(false);
 
     // Detect resize of preview and adjust editor to match
     const onResize = useCallback((w, h) => {
@@ -65,8 +64,18 @@ function Article() {
         }
     }, [router.asPath]);
 
-    const handleModalClose = () => setShowmodal(false);
-    const handleModalShow = () => setShowmodal(true);
+    const handleDeleteModalClose = () => setShowDeleteModal(false);
+    const handleClipboardModalClose = () => setShowClipboardModal(false);
+    const handleDeleteModalShow = () => setShowDeleteModal(true);
+
+    const onCopyToClipboard = () => {
+        notification({
+            title: 'Success',
+            type: 'success',
+            message: 'Image markdown copied to clipboard',
+        });
+        setShowClipboardModal(false);
+    };
 
     const handleEditorChange = event => {
         setArticleContentRaw(event.target.value);
@@ -107,29 +116,28 @@ function Article() {
         setEditorHover('');
         const formData = new FormData();
         formData.append('image', file);
-        const res = await axios.post('/api/file/upload', formData, {
-            //TODO
+        const res = await axios.post('/api/admin/file/upload', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         });
 
-        // Take the response and form markdown into clipboard
-        const filedata = await res.data;
-        const mkdownUrl = `![alt text](${filedata.url})`;
-        if (clipboard(mkdownUrl)) {
-            notification({
-                title: 'Success',
-                type: 'success',
-                message: 'Image markdown copied to clipboard',
-            });
-        } else {
+        // Check for error
+        if (res.data.error) {
             notification({
                 title: 'Error',
                 type: 'danger',
-                message: 'Error copying markdown to clipboard',
+                message: res.data.error,
             });
+            return;
         }
+
+        // Take the response and form markdown into clipboard
+        const filedata = await res.data;
+        const mkdownUrl = `![alt text](${filedata.url})`;
+        console.log('mkdownUrl', mkdownUrl);
+        setImageUrl(mkdownUrl);
+        setShowClipboardModal(true);
     };
 
     const deleteArticle = async () => {
@@ -146,7 +154,7 @@ function Article() {
         try {
             await apiReq().delete(`/api/article/delete/${article.id}`);
 
-            setShowmodal(false);
+            setShowDeleteModal(false);
             notification({
                 title: 'Success',
                 type: 'success',
@@ -241,7 +249,7 @@ function Article() {
                                                                 <button
                                                                     className="btn btn-danger"
                                                                     onClick={
-                                                                        handleModalShow
+                                                                        handleDeleteModalShow
                                                                     }
                                                                     type="button"
                                                                 >
@@ -311,13 +319,16 @@ function Article() {
                             </div>
                         </div>
                     </main>
-                    <Modal onHide={handleModalClose} show={showmodal}>
+                    <Modal
+                        onHide={handleDeleteModalClose}
+                        show={showDeleteModal}
+                    >
                         <Modal.Header closeButton>
                             <Modal.Title>Are you sure?</Modal.Title>
                         </Modal.Header>
                         <Modal.Footer>
                             <Button
-                                onClick={handleModalClose}
+                                onClick={handleDeleteModalClose}
                                 variant="secondary"
                             >
                                 Close
@@ -325,6 +336,25 @@ function Article() {
                             <Button onClick={deleteArticle} variant="danger">
                                 Delete article
                             </Button>
+                        </Modal.Footer>
+                    </Modal>
+                    <Modal
+                        onHide={handleClipboardModalClose}
+                        show={showClipboardModal}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Image uploaded</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Footer>
+                            <span>{imageUrl}</span>
+                            <CopyToClipboard
+                                onCopy={onCopyToClipboard}
+                                text={imageUrl}
+                            >
+                                <Button variant="success">
+                                    Copy to clipboard
+                                </Button>
+                            </CopyToClipboard>
                         </Modal.Footer>
                     </Modal>
                 </div>
