@@ -18,25 +18,3 @@ export function notification(data) {
         toast.error(data.message, notificationObj);
     }
 }
-
-export function clipboard(clipboardStr) {
-    // Try navigator copy
-    if ('clipboard' in navigator) {
-        try {
-            navigator.clipboard.writeText(clipboardStr);
-            return true;
-        } catch (ex) {
-            console.log('Failed to copy to clipboard - navigator', ex);
-            return false;
-        }
-    }
-
-    // Fall back to execCommand
-    try {
-        document.execCommand('copy', true, clipboardStr);
-        return true;
-    } catch (ex) {
-        console.log('Failed to copy API key - execCommand', ex);
-        return false;
-    }
-}
