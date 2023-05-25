@@ -115,6 +115,21 @@ function Article() {
         setEditorHover('');
     };
 
+    const onPaste = async e => {
+        const clipboardItems = e.clipboardData.items;
+        const items = [].slice.call(clipboardItems).filter(function (item) {
+            // Filter the image items only
+            return /^image\//.test(item.type);
+        });
+        // If we have an image, we try upload it
+        if (items.length > 0) {
+            setUploading(true);
+            const file = items[0].getAsFile();
+            await fileUpload(file);
+            return;
+        }
+    };
+
     const fileUpload = async file => {
         setEditorHover('');
         const formData = new FormData();
@@ -315,6 +330,9 @@ function Article() {
                                                                         }
                                                                         onKeyDown={
                                                                             handleKeyDown
+                                                                        }
+                                                                        onPaste={
+                                                                            onPaste
                                                                         }
                                                                         style={{
                                                                             height: editorHeight,

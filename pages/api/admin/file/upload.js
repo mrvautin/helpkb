@@ -66,6 +66,7 @@ export default async function handler(req, res) {
             Body: createReadStream(file.filepath),
             ACL: 'public-read',
             ContentType: file.mimetype,
+            ContentLength: file.size,
         });
         const response = await s3Client.send(uploadCommand);
 
