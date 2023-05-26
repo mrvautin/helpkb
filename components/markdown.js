@@ -27,12 +27,26 @@ function Markdown(markdown) {
                     );
                 },
                 img: ({ node, ...props }) => {
+                    // Check for customer image sizing
+                    // and apply size to img element
+                    let imgSize = '';
+                    if (node.properties.alt) {
+                        const alt = node.properties.alt;
+                        if (alt.includes('=')) {
+                            const altSplit = alt.split('=');
+                            if (altSplit.length > 1) {
+                                imgSize = altSplit[1];
+                            }
+                        }
+                    }
                     return (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                             alt={node.properties.alt}
                             className="img-fluid"
+                            height="auto"
                             src={node.properties.src}
+                            width={imgSize}
                             {...props}
                         />
                     );
