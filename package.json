@@ -35,6 +35,7 @@
     "db:setup:test": "npx dotenv -e .env.test -- npx prisma db push",
     "db:setup:dev": "npx dotenv -e .env.development -- npx prisma db push",
     "db:setup:prod": "npx dotenv -e .env.production -- npx prisma db push",
+    "postbuild": "next-sitemap",
     "postinstall": "npx prisma generate"
   },
   "dependencies": {
@@ -48,6 +49,7 @@
     "gray-matter": "^4.0.3",
     "next": "13.4.2",
     "next-auth": "^4.22.1",
+    "next-sitemap": "^4.1.3",
     "nextjs-progressbar": "^0.0.14",
     "react": "^18.2.0",
     "react-bootstrap": "^2.4.0",

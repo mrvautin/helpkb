@@ -18,4 +18,16 @@ module.exports = {
     experimental: {
         forceSwcTransforms: true,
     },
+    async rewrites() {
+        return [
+            {
+                source: '/sitemap.xml',
+                destination: '/sitemap',
+            },
+            {
+                source: '/robots.txt',
+                destination: '/api/robots',
+            },
+        ];
+    },
 };
