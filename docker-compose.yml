@@ -16,13 +16,6 @@ services:
     environment:
       # Set environment variables: https://github.com/vercel/next.js/discussions/15651
       - NODE_ENV=development
-      - DB_HOST=helpkb_db
-      - DB_PORT=5432
-      - DB_NAME=helpkb-test
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=helpkb
-      - UI_PORT=3000
-      - BASE_URL=http://localhost
       - SESSION_SECRET=random-string
       - GITHUB_CLIENT_ID=github-client-id
       - GITHUB_SECRET=github-secret
@@ -61,8 +54,6 @@ services:
     ports:
       - 3000:3000
     environment:
-      - UI_PORT=3000
       - NODE_ENV=development
-      - HOSTNAME=http://localhost
-      - BASE_URL=http://localhost
-      - NEXT_PUBLIC_BASE_URL=http://localhost
+      - HOST_NAME=http://localhost:3000
+      - NEXT_PUBLIC_BASE_URL=http://localhost:3000
