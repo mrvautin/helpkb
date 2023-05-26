@@ -22,11 +22,20 @@ function Home() {
             const articleUrl = routerPath.replace('/article/', '');
 
             // Grab the article
-            const articleRes = await apiReq().get(`/api/article/${articleUrl}`);
+            try {
+                const articleRes = await apiReq().get(
+                    `/api/article/${articleUrl}`,
+                );
 
-            // Parse content
-            const parsedContent = parseContent(articleRes.data);
-            setArticle(parsedContent);
+                // Parse content
+                const parsedContent = parseContent(articleRes.data);
+                setArticle(parsedContent);
+            } catch (ex) {
+                setArticle({
+                    error: 'not found',
+                    url: articleUrl,
+                });
+            }
         };
 
         fetchData();
