@@ -1,6 +1,3 @@
-node_modules
-/config# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /config
@@ -11,8 +8,8 @@ node_modules
 /coverage
 
 # production
-/ui/build
-/ui/temp
+/build
+/temp
 ecosystem.config.js
 
 # misc
@@ -21,13 +18,7 @@ ecosystem.config.js
 .env.development.local
 .env.test.local
 .env.production.local
-nextjs-pm2-deploy.sh
-/ui/public/images/logo.pxd
-
-# temp files
-/ui/public/uploads
-/api/uploads
-/api/tmp
+sitemap*.xml
 
 npm-debug.log*
 yarn-debug.log*
