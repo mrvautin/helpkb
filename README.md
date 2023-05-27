@@ -6,18 +6,18 @@ A superfast and easy to use knowledge base to help your customers get the info t
 
 ## Demo
 
-- [See demo](https://helpkb.vercel.app/)
+- [See demo](https://demo-helpkb.markmoffat.com)
 
 ## Website
 
-- [Homepage](https://helpkb.markmoffat.com/)
+- [Homepage](https://helpkb.markmoffat.com)
 
 ## Get started
 
-- [Getting started guide](https://helpkb.vercel.app/articles/getting-started/)
+- [Getting started guide](https://demo-helpkb.markmoffat.com/article/getting-started)
 
 ## Documentation
 
-- [Help](https://helpkb.vercel.app/)
-- [Configuration](https://helpkb.vercel.app/category/configuration/)
-- [APIs](https://helpkb.markmoffat.com/documentation/)
+- [Help](https://demo-helpkb.markmoffat.com)
+- [Configuration](https://demo-helpkb.markmoffat.com/category/configuration)
+- [APIs](https://helpkb.markmoffat.com/documentation)
