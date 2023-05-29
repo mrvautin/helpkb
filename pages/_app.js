@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { SettingsProvider } from '../contexts/settings';
 import { SessionProvider } from 'next-auth/react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/index.css';
 import NextNProgress from 'nextjs-progressbar';
 

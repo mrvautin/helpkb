@@ -6,7 +6,7 @@ A superfast and easy to use knowledge base to help your customers get the info t
 
 ## Demo
 
-- [See demo](https://demo-helpkb.markmoffat.com)
+- [See demo](https://helpkb-docs.markmoffat.com)
 
 ## Website
 
@@ -14,10 +14,10 @@ A superfast and easy to use knowledge base to help your customers get the info t
 
 ## Get started
 
-- [Getting started guide](https://demo-helpkb.markmoffat.com/article/getting-started)
+- [Getting started guide](https://helpkb-docs.markmoffat.com/article/getting-started)
 
 ## Documentation
 
-- [Help](https://demo-helpkb.markmoffat.com)
-- [Configuration](https://demo-helpkb.markmoffat.com/category/configuration)
+- [Help](https://helpkb-docs.markmoffat.com)
+- [Configuration](https://helpkb-docs.markmoffat.com/category/configuration)
 - [APIs](https://helpkb.markmoffat.com/documentation)
